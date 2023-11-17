@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+</head>
+<body>
+<div class="container">
+    <form action="/join" method="post">
+        <div class="form-group">
+            <label for="name">이름</label>
+            <input type="text" id="name" name="name" placeholder="이름을 입력하세요">
+            <br>
+            <label for="phone">전화번호</label>
+            <input type="text" id="phone" name="phone" placeholder="전화번호를 입력하세요">
+            <br>
+            <label for="email">이메일</label>
+            <input type="text" id="email" name="email" placeholder="이메일을 입력하세요">
+            <button>인증번호 전송</button>
+            <label for="pwd">비밀번호</label>
+            <input type="password" id="pwd" name="pwd" placeholder="비밀번호를 입력하세요">
+            <br>
+            <label for="checkPwd">비밀번호 확인</label>
+            <input type="password" id="checkPwd" name="checkPwd" placeholder="비밀번호를 입력하세요">
+            <br>
+            <label for="home">주소</label>
+            <select id="city" name="city">
+                <option>시/도 선택</option>
+                <option>서울특별시</option>
+            </select>
+            <select id="district" name="district">
+                <option>구/군 선택</option>
+                <option>송파구</option>
+                <option>강남구</option>
+                <option>강동구</option>
+            </select>
+            <input type="hidden" id="home" name="home">
+            <br>
+            <label for="carNum">차량 번호</label>
+            <input type="text" id="carNum" name="carNum" placeholder="차량번호를 입력하세요">
+            <br>
+        </div>
+        <button type="submit">회원 가입</button>
+    </form>
+</div>
+</body>
+</html>
