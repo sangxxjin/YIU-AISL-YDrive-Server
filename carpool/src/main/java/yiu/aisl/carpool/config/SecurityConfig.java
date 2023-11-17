@@ -71,9 +71,9 @@ public class SecurityConfig {
             // 회원가입과 로그인은 모두 승인
             .requestMatchers("/register", "/login", "/join", "/join/emailCheck").permitAll()
             // /admin으로 시작하는 요청은 ADMIN 권한이 있는 유저에게만 허용
-            .requestMatchers("/admin/**").hasRole("ADMIN")
+//            .requestMatchers("/admin/**").hasRole("ADMIN")
             // /user 로 시작하는 요청은 USER 권한이 있는 유저에게만 허용
-            .requestMatchers("/user/**").hasRole("USER")
+//            .requestMatchers("/user/**").hasRole("USER")
             // refresh 경로 설정*
 //            .requestMatchers("/register", "/login", "/refresh").permitAll()
             .anyRequest().authenticated())

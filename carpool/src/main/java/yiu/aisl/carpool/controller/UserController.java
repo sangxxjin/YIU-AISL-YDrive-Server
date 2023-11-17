@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import yiu.aisl.carpool.Dto.EmailCheckReq;
-import yiu.aisl.carpool.Dto.SignRequest;
-import yiu.aisl.carpool.Dto.SignResponse;
-import yiu.aisl.carpool.Dto.TokenDto;
+import yiu.aisl.carpool.Dto.*;
 import yiu.aisl.carpool.repository.UserRepository;
 import yiu.aisl.carpool.service.EmailService;
 import yiu.aisl.carpool.service.UserService;
@@ -52,5 +49,10 @@ public class UserController {
 
     String authCode = emailService.sendEmail(emailDto.getEmail());
     return authCode;
+  }
+
+  @PostMapping("/user/changepwd")
+  public ResponseEntity<Boolean> join(@RequestBody PwdRequest request) throws Exception {
+    return new ResponseEntity<>(userService.changePwd(request), HttpStatus.OK);
   }
 }

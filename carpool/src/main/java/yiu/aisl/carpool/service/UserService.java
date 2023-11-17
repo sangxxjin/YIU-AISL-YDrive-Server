@@ -1,5 +1,6 @@
 package yiu.aisl.carpool.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import yiu.aisl.carpool.Dto.PwdRequest;
 import yiu.aisl.carpool.Dto.TokenDto;
 import yiu.aisl.carpool.domain.Token;
 import yiu.aisl.carpool.repository.TokenRepository;
@@ -25,6 +27,7 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
   private final JwtProvider jwtProvider;
   private final TokenRepository tokenRepository;
+    private final HttpServletRequest httpServletRequest;
 
 
 
@@ -69,6 +72,23 @@ public class UserService {
       throw new Exception("잘못된 요청입니다.");
     }
     return true;
+  }
+
+  public boolean changePwd(PwdRequest request) throws Exception {
+      try {
+          String authHeader = httpServletRequest.getHeader("Authorization");
+          if (authHeader != null && authHeader.startsWith("Bearer ")) {
+              String token = authHeader.substring(7);
+              String email = jwtProvider.getEmail(token);
+              User user = userRepository.findByEmail(email)
+                      .orElseThrow(() -> new Exception("사용자의 이메일이 아닙니다."));
+              user.changePwd(passwordEncoder.encode(request.getPwd()));
+          }
+      } catch (DataIntegrityViolationException e) {
+          System.out.println(e.getMessage());
+          throw new Exception("잘못된 요청입니다.");
+      }
+      return true;
   }
 
   public SignResponse getUser(String email) throws Exception {

@@ -31,6 +31,9 @@ public class User {
 
   private String refreshToken;
 
+  public void changePwd(String pwd) {
+    this.pwd = pwd;
+  }
   public void setRefreshToken(String refreshToken) {
     this.refreshToken = refreshToken;
   }
