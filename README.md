@@ -15,3 +15,5 @@
 * <https://stackoverflow.com/questions/50284841/how-to-extract-token-string-from-bearer-token>  
 * <https://yeon-blog.tistory.com/3>
 
+### 데이터 수정 로직(게시물 수정 & 비밀번호 변경 등)
+* <https://anywaydevlog.tistory.com/106>
