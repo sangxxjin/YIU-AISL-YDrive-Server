@@ -10,6 +10,9 @@ import yiu.aisl.carpool.domain.Carpool;
 import yiu.aisl.carpool.repository.CarpoolRepository;
 import yiu.aisl.carpool.security.JwtProvider;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -20,6 +23,8 @@ public class CarpoolService {
 
     public boolean create(CarpoolRequest request) throws Exception {
         try {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+            Date date = new Date(System.currentTimeMillis());
             String authHeader = httpServletRequest.getHeader("Authorization");
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 String token = authHeader.substring(7);
@@ -32,7 +37,7 @@ public class CarpoolService {
                         .checkNum(request.getCheckNum())
                         .memberNum(request.getMemberNum())
                         .email(email)
-                        .createdAt(request.getCreatedAt())
+                        .createdAt(date)
                         .build();
                 carpoolRepository.save(carpool);
             }
