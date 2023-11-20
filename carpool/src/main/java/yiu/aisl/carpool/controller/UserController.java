@@ -52,6 +52,13 @@ public class UserController {
     return authCode;
   }
 
+  @ResponseBody
+  @PostMapping("/join/emailCheckTrue")
+  public boolean emailTrue(@RequestBody EmailCheckReq emailDto) {
+    boolean emailCheckTrue = emailService.emailTrue(emailDto.getAuthNum());
+    return emailCheckTrue;
+  }
+
   @PostMapping(value="/user/changepwd", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
   public ResponseEntity<Boolean> join(PwdRequest request) throws Exception {
     return new ResponseEntity<>(userService.changePwd(request), HttpStatus.OK);
