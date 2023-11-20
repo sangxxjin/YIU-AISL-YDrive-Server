@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import yiu.aisl.carpool.Dto.*;
 import yiu.aisl.carpool.repository.UserRepository;
+import yiu.aisl.carpool.security.CustomUserDetails;
 import yiu.aisl.carpool.service.EmailService;
 import yiu.aisl.carpool.service.UserService;
 
@@ -62,5 +64,9 @@ public class UserController {
   @PostMapping(value="/user/changepwd", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
   public ResponseEntity<Boolean> join(PwdRequest request) throws Exception {
     return new ResponseEntity<>(userService.changePwd(request), HttpStatus.OK);
+  }
+  @GetMapping("/myprofile")
+  public ResponseEntity<Object> myprofile(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    return new ResponseEntity<>(userService.getProfile(userDetails), HttpStatus.OK);
   }
 }
