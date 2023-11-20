@@ -11,4 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class EmailCheckReq {
     private String email;
+    private String authNum;
 }
