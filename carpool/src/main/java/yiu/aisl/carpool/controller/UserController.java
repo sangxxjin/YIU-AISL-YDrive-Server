@@ -2,6 +2,7 @@ package yiu.aisl.carpool.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import yiu.aisl.carpool.Dto.*;
@@ -20,12 +21,12 @@ public class UserController {
   private final UserService userService;
   private final EmailService emailService;
 
-  @PostMapping("/join")
-  public ResponseEntity<Boolean> join(@RequestBody SignRequest request) throws Exception {
+  @PostMapping(value="/join", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+  public ResponseEntity<Boolean> join(SignRequest request) throws Exception {
     return new ResponseEntity<>(userService.join(request), HttpStatus.OK);
   }
-  @PostMapping(value = "/login")
-  public ResponseEntity<SignResponse> login(@RequestBody SignRequest request) throws Exception {
+  @PostMapping(value = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+  public ResponseEntity<SignResponse> login(SignRequest request) throws Exception {
     return new ResponseEntity<>(userService.login(request), HttpStatus.OK);
   }
 
@@ -44,15 +45,15 @@ public class UserController {
   }
 
   @ResponseBody
-  @PostMapping("/join/emailCheck")
-  public String mailConfirm(@RequestBody EmailCheckReq emailDto) throws MessagingException, UnsupportedEncodingException {
+  @PostMapping(value="/join/emailCheck", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+  public String mailConfirm(EmailCheckReq emailDto) throws MessagingException, UnsupportedEncodingException {
 
     String authCode = emailService.sendEmail(emailDto.getEmail());
     return authCode;
   }
 
-  @PostMapping("/user/changepwd")
-  public ResponseEntity<Boolean> join(@RequestBody PwdRequest request) throws Exception {
+  @PostMapping(value="/user/changepwd", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+  public ResponseEntity<Boolean> join(PwdRequest request) throws Exception {
     return new ResponseEntity<>(userService.changePwd(request), HttpStatus.OK);
   }
 }

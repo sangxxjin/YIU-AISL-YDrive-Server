@@ -80,6 +80,8 @@ public class UserService {
           if (authHeader != null && authHeader.startsWith("Bearer ")) {
               String token = authHeader.substring(7);
               String email = jwtProvider.getEmail(token);
+
+              // 현재 사용자의 이메일이 맞는지 검사를 못하고 있음
               User user = userRepository.findByEmail(email)
                       .orElseThrow(() -> new Exception("사용자의 이메일이 아닙니다."));
               user.changePwd(passwordEncoder.encode(request.getPwd()));
