@@ -158,4 +158,32 @@ public class UserService {
         .carNum(user.get().getCarNum())
         .build();
   }
+
+  public String profileUpdate(CustomUserDetails userDetails, MyprofileDto myprofileDto) {
+
+    Optional<User> userGet = userRepository.findByEmail(userDetails.getUser().getEmail());
+
+    if (userGet.isEmpty()) {
+      throw new IllegalArgumentException();
+    }
+
+    User user = userGet.get();
+
+    if (!myprofileDto.getName().equals(user.getName())) {
+      user.setName(myprofileDto.getName());
+    }
+    if (!myprofileDto.getPhone().equals(user.getPhone())) {
+      user.setPhone(myprofileDto.getPhone());
+    }
+    if (!myprofileDto.getHome().equals(user.getHome())) {
+      user.setHome(myprofileDto.getHome());
+    }
+    if (!myprofileDto.getCarNum().equals(user.getCarNum())) {
+      user.setCarNum(myprofileDto.getCarNum());
+    }
+
+
+    userRepository.save(user);
+    return "success";
+  }
 }
