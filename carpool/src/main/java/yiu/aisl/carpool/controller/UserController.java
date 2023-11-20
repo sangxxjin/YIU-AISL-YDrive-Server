@@ -69,4 +69,9 @@ public class UserController {
   public ResponseEntity<Object> myprofile(@AuthenticationPrincipal CustomUserDetails userDetails) {
     return new ResponseEntity<>(userService.getProfile(userDetails), HttpStatus.OK);
   }
+
+  @PutMapping("/myprofile/update")
+  public ResponseEntity<Object> myprofileUpdate(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody MyprofileDto myprofileDto) {
+    return new ResponseEntity<>(userService.profileUpdate(userDetails, myprofileDto), HttpStatus.OK);
+  }
 }
