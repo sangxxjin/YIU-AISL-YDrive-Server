@@ -2,16 +2,19 @@ package yiu.aisl.carpool.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import yiu.aisl.carpool.Dto.MyprofileDto;
 import yiu.aisl.carpool.Dto.PwdRequest;
 import yiu.aisl.carpool.Dto.TokenDto;
 import yiu.aisl.carpool.domain.Token;
 import yiu.aisl.carpool.repository.TokenRepository;
+import yiu.aisl.carpool.security.CustomUserDetails;
 import yiu.aisl.carpool.security.JwtProvider;
 import yiu.aisl.carpool.Dto.SignRequest;
 import yiu.aisl.carpool.Dto.SignResponse;
@@ -27,13 +30,12 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
   private final JwtProvider jwtProvider;
   private final TokenRepository tokenRepository;
-    private final HttpServletRequest httpServletRequest;
-
+  private final HttpServletRequest httpServletRequest;
 
 
   public SignResponse login(SignRequest request) throws Exception {
     User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() ->
-            new BadCredentialsException("잘못된 계정정보입니다."));
+        new BadCredentialsException("잘못된 계정정보입니다."));
 
     if (!passwordEncoder.matches(request.getPwd(), user.getPwd())) {
       throw new BadCredentialsException("잘못된 계정정보입니다.");
@@ -42,29 +44,28 @@ public class UserService {
     user.setRefreshToken(createRefreshToken(user));
 
     return SignResponse.builder()
-            .email(user.getEmail())
-            .name(user.getName())
-            .phone(user.getPhone())
-            .home(user.getHome())
-            .carNum(user.getCarNum())
-            .token(TokenDto.builder()
-                    .access_token(jwtProvider.createToken(user.getEmail()))
-                    .refresh_token(user.getRefreshToken())
-                    .build())
-            .build();
+        .email(user.getEmail())
+        .name(user.getName())
+        .phone(user.getPhone())
+        .home(user.getHome())
+        .carNum(user.getCarNum())
+        .token(TokenDto.builder()
+            .access_token(jwtProvider.createToken(user.getEmail()))
+            .refresh_token(user.getRefreshToken())
+            .build())
+        .build();
   }
 
   public boolean join(SignRequest request) throws Exception {
     try {
       User user = User.builder()
-              .email(request.getEmail())
-              .name(request.getName())
-              .phone(request.getPhone())
-              .home(request.getHome())
-              .pwd(passwordEncoder.encode(request.getPwd()))
-              .carNum(request.getCarNum())
-              .build();
-
+          .email(request.getEmail())
+          .name(request.getName())
+          .phone(request.getPhone())
+          .home(request.getHome())
+          .pwd(passwordEncoder.encode(request.getPwd()))
+          .carNum(request.getCarNum())
+          .build();
 
       userRepository.save(user);
     } catch (DataIntegrityViolationException e) {
@@ -75,29 +76,30 @@ public class UserService {
   }
 
   public boolean changePwd(PwdRequest request) throws Exception {
-      try {
-          String authHeader = httpServletRequest.getHeader("Authorization");
-          if (authHeader != null && authHeader.startsWith("Bearer ")) {
-              String token = authHeader.substring(7);
-              String email = jwtProvider.getEmail(token);
+    try {
+      String authHeader = httpServletRequest.getHeader("Authorization");
+      if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        String token = authHeader.substring(7);
+        String email = jwtProvider.getEmail(token);
 
-              // 현재 사용자의 이메일이 맞는지 검사를 못하고 있음
-              User user = userRepository.findByEmail(email)
-                      .orElseThrow(() -> new Exception("사용자의 이메일이 아닙니다."));
-              user.changePwd(passwordEncoder.encode(request.getPwd()));
-          }
-      } catch (DataIntegrityViolationException e) {
-          System.out.println(e.getMessage());
-          throw new Exception("잘못된 요청입니다.");
+        // 현재 사용자의 이메일이 맞는지 검사를 못하고 있음
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new Exception("사용자의 이메일이 아닙니다."));
+        user.changePwd(passwordEncoder.encode(request.getPwd()));
       }
-      return true;
+    } catch (DataIntegrityViolationException e) {
+      System.out.println(e.getMessage());
+      throw new Exception("잘못된 요청입니다.");
+    }
+    return true;
   }
 
   public SignResponse getUser(String email) throws Exception {
     User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다."));
+        .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다."));
     return new SignResponse(user);
   }
+
   public String createRefreshToken(User user) {
     Token token = tokenRepository.save(
         Token.builder()
@@ -130,6 +132,7 @@ public class UserService {
       }
     }
   }
+
   public TokenDto refreshAccessToken(TokenDto token) throws Exception {
     String email = jwtProvider.getEmail(token.getAccess_token());
     User user = userRepository.findByEmail(email).orElseThrow(() ->
@@ -144,5 +147,15 @@ public class UserService {
     } else {
       throw new Exception("로그인을 해주세요");
     }
+  }
+
+  public Object getProfile(CustomUserDetails userDetails) {
+    Optional<User> user = userRepository.findByEmail(userDetails.getUser().getEmail());
+    return MyprofileDto.builder()
+        .name(user.get().getName())
+        .phone(user.get().getPhone())
+        .home(user.get().getHome())
+        .carNum(user.get().getCarNum())
+        .build();
   }
 }
