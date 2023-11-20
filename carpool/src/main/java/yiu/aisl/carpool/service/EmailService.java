@@ -1,5 +1,6 @@
 package yiu.aisl.carpool.service;
 
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -80,5 +81,10 @@ public class EmailService {
         emailSender.send(emailForm);
 
         return authNum;
+    }
+
+    // 이메일 검증
+    public boolean emailTrue(String userAuthNum){
+        return Objects.equals(authNum, userAuthNum);
     }
 }
