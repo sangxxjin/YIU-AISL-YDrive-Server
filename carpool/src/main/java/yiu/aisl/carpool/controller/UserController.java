@@ -24,11 +24,11 @@ public class UserController {
   private final EmailService emailService;
 
   @PostMapping("/join")
-  public ResponseEntity<Boolean> join(@RequestParam SignRequest request) throws Exception {
+  public ResponseEntity<Boolean> join(@RequestBody SignRequest request) throws Exception {
     return new ResponseEntity<>(userService.join(request), HttpStatus.OK);
   }
   @PostMapping("/login")
-  public ResponseEntity<SignResponse> login(@RequestParam SignRequest request) throws Exception {
+  public ResponseEntity<SignResponse> login(@RequestBody SignRequest request) throws Exception {
     return new ResponseEntity<>(userService.login(request), HttpStatus.OK);
   }
 
@@ -48,7 +48,7 @@ public class UserController {
 
   @ResponseBody
   @PostMapping("/join/emailCheck")
-  public String mailConfirm(@RequestParam EmailCheckReq emailDto) throws MessagingException, UnsupportedEncodingException {
+  public String mailConfirm(@RequestBody EmailCheckReq emailDto) throws MessagingException, UnsupportedEncodingException {
 
     String authCode = emailService.sendEmail(emailDto.getEmail());
     return authCode;
@@ -62,7 +62,7 @@ public class UserController {
   }
 
   @PostMapping("/user/changepwd")
-  public ResponseEntity<Boolean> join(@RequestParam PwdRequest request) throws Exception {
+  public ResponseEntity<Boolean> join(@RequestBody PwdRequest request) throws Exception {
     return new ResponseEntity<>(userService.changePwd(request), HttpStatus.OK);
   }
   @GetMapping("/myprofile")
