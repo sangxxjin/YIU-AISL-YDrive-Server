@@ -17,28 +17,17 @@ public class EmailService {
     private final JavaMailSender emailSender;
 
     private String authNum;
-    // 인증번호 8자리 생성
+    // 인증번호 6자리 생성
     public void createCode() {
         Random random = new Random();
-        StringBuffer key = new StringBuffer();
+        StringBuilder key = new StringBuilder();
 
-        for(int i = 0; i<8; i++) {
-            // 0~2 사이의 값을 랜덤하게 받아옴
-            int idx = random.nextInt(3);
-
-            // idx 값을 switchcase 를 통해 한번 더 꼬기
-            switch(idx) {
-                case 0:
-                    key.append((char) ((int)random.nextInt(26) + 97));
-                    break;
-                case 1:
-                    key.append((char) ((int)random.nextInt(26) + 65));
-                    break;
-                case 2:
-                    key.append(random.nextInt(9));
-                    break;
-            }
+        for (int i = 0; i < 6; i++) {
+            // 0~9 사이의 값을 랜덤하게 받아옴
+            int digit = random.nextInt(10);
+            key.append(digit);
         }
+
         authNum = key.toString();
     }
 
