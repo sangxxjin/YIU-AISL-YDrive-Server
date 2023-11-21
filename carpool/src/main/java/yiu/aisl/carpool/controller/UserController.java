@@ -23,12 +23,12 @@ public class UserController {
   private final UserService userService;
   private final EmailService emailService;
 
-  @PostMapping(value="/join", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-  public ResponseEntity<Boolean> join(SignRequest request) throws Exception {
+  @PostMapping("/join")
+  public ResponseEntity<Boolean> join(@RequestParam SignRequest request) throws Exception {
     return new ResponseEntity<>(userService.join(request), HttpStatus.OK);
   }
-  @PostMapping(value = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-  public ResponseEntity<SignResponse> login(SignRequest request) throws Exception {
+  @PostMapping("/login")
+  public ResponseEntity<SignResponse> login(@RequestParam SignRequest request) throws Exception {
     return new ResponseEntity<>(userService.login(request), HttpStatus.OK);
   }
 
@@ -47,8 +47,8 @@ public class UserController {
   }
 
   @ResponseBody
-  @PostMapping(value="/join/emailCheck", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-  public String mailConfirm(EmailCheckReq emailDto) throws MessagingException, UnsupportedEncodingException {
+  @PostMapping("/join/emailCheck")
+  public String mailConfirm(@RequestParam EmailCheckReq emailDto) throws MessagingException, UnsupportedEncodingException {
 
     String authCode = emailService.sendEmail(emailDto.getEmail());
     return authCode;
@@ -61,8 +61,8 @@ public class UserController {
     return emailCheckTrue;
   }
 
-  @PostMapping(value="/user/changepwd", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-  public ResponseEntity<Boolean> join(PwdRequest request) throws Exception {
+  @PostMapping("/user/changepwd")
+  public ResponseEntity<Boolean> join(@RequestParam PwdRequest request) throws Exception {
     return new ResponseEntity<>(userService.changePwd(request), HttpStatus.OK);
   }
   @GetMapping("/myprofile")
