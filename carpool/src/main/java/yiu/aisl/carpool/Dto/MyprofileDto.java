@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MyprofileDto {
-
   private String name;
   private String phone;
   private String home;
