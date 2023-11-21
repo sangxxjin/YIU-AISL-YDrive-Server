@@ -158,7 +158,7 @@ public class UserService {
         .carNum(user.get().getCarNum())
         .build();
   }
-
+  //나중에 void 형식으로 바꿀때 ifPresent() 사용해서 람다식으로 바꾸면 됌
   public String profileUpdate(CustomUserDetails userDetails, MyprofileDto myprofileDto) {
     Optional<User> userOptional = userRepository.findByEmail(userDetails.getUser().getEmail());
     if (userOptional.isEmpty()) {

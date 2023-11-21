@@ -54,6 +54,7 @@ public class CarpoolService {
         }
         return true;
     }
+    //나중에 void 형식으로 바꿀때 ifPresent() 사용해서 람다식으로 바꾸면 됌
     public boolean update(CustomUserDetails userDetails, CarpoolDto carpoolDto){
         Optional<User> userOptional = userRepository.findByEmail(userDetails.getUser().getEmail());
         if (userOptional.isEmpty()) {
