@@ -1,5 +1,6 @@
 package yiu.aisl.carpool.Dto;
 
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +12,7 @@ public class CarpoolRequest {
     private int carpoolNum;
     private String start;
     private String end;
-    private Date date;
+    private LocalDateTime date;
     private int memberNum;
     private String email;
     private int checkNum;
