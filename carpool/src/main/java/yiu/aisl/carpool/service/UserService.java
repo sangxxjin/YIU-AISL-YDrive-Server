@@ -160,15 +160,11 @@ public class UserService {
   }
 
   public String profileUpdate(CustomUserDetails userDetails, MyprofileDto myprofileDto) {
-
-    Optional<User> userGet = userRepository.findByEmail(userDetails.getUser().getEmail());
-
-    if (userGet.isEmpty()) {
-      throw new IllegalArgumentException();
+    Optional<User> userOptional = userRepository.findByEmail(userDetails.getUser().getEmail());
+    if (userOptional.isEmpty()) {
+      throw new IllegalArgumentException("User not found");
     }
-
-    User user = userGet.get();
-
+    User user = userOptional.get();
     if (!myprofileDto.getName().equals(user.getName())) {
       user.setName(myprofileDto.getName());
     }
@@ -181,8 +177,6 @@ public class UserService {
     if (!myprofileDto.getCarNum().equals(user.getCarNum())) {
       user.setCarNum(myprofileDto.getCarNum());
     }
-
-
     userRepository.save(user);
     return "success";
   }
