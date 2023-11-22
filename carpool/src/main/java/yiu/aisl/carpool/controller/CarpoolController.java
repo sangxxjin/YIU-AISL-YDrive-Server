@@ -18,14 +18,22 @@ import yiu.aisl.carpool.service.CarpoolService;
 @RequestMapping("/carpool")
 @RequiredArgsConstructor
 public class CarpoolController {
-    private final CarpoolRepository carpoolRepository;
-    private final CarpoolService carpoolService;
-    @PostMapping("/carpool/create")
-    public ResponseEntity<Boolean> carpoolCreate(@RequestBody CarpoolRequest request) throws Exception {
-        return new ResponseEntity<>(carpoolService.create(request), HttpStatus.OK);
-    }
-    @PutMapping("/carpool/update")
-    public ResponseEntity<Object> carpoolUpdate(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody CarpoolDto carpoolDto) {
-        return new ResponseEntity<>(carpoolService.update(userDetails,carpoolDto), HttpStatus.OK);
-    }
+  private final CarpoolRepository carpoolRepository;
+  private final CarpoolService carpoolService;
+  @PostMapping("/create")
+  public ResponseEntity<Boolean> carpoolCreate(@RequestBody CarpoolRequest request)
+      throws Exception {
+    return new ResponseEntity<>(carpoolService.create(request), HttpStatus.OK);
+  }
+
+  @PutMapping("/update/{carpoolNum}")
+  public ResponseEntity<Object> carpoolUpdate(
+      @AuthenticationPrincipal CustomUserDetails userDetails,
+      @PathVariable int carpoolNum,
+      @RequestBody CarpoolDto carpoolDto) {
+    carpoolService.update(userDetails, carpoolNum, carpoolDto);
+    return ResponseEntity.ok("업데이트 성공");
+  }
+
+
 }
