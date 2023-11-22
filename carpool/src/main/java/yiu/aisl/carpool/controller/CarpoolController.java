@@ -15,6 +15,7 @@ import yiu.aisl.carpool.security.CustomUserDetails;
 import yiu.aisl.carpool.service.CarpoolService;
 
 @RestController
+@RequestMapping("/carpool")
 @RequiredArgsConstructor
 public class CarpoolController {
     private final CarpoolRepository carpoolRepository;
