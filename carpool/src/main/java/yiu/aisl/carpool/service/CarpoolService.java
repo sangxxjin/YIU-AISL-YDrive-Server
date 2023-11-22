@@ -8,9 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import yiu.aisl.carpool.Dto.CarpoolDto;
 import yiu.aisl.carpool.Dto.CarpoolRequest;
-import yiu.aisl.carpool.Dto.MyprofileDto;
 import yiu.aisl.carpool.domain.Carpool;
-import yiu.aisl.carpool.domain.User;
 import yiu.aisl.carpool.repository.CarpoolRepository;
 import yiu.aisl.carpool.repository.UserRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
@@ -54,27 +52,20 @@ public class CarpoolService {
         }
         return true;
     }
-    //나중에 void 형식으로 바꿀때 ifPresent() 사용해서 람다식으로 바꾸면 됌
-    public boolean update(CustomUserDetails userDetails, CarpoolDto carpoolDto){
-        Optional<User> userOptional = userRepository.findByEmail(userDetails.getUser().getEmail());
-        if (userOptional.isEmpty()) {
-            throw new IllegalArgumentException("User not found");
-        }
-        Optional<Carpool> carpoolOptional = carpoolRepository.findByEmail(userDetails.getUser().getEmail());
-        Carpool carpool = carpoolOptional.get();
-        if (!carpoolDto.getStart().equals(carpool.getStart())){
+    public void update(CustomUserDetails userDetails, int carpoolNum, CarpoolDto carpoolDto) {
+        String email = userDetails.getUser().getEmail();
+        Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email);
+
+        if (carpoolOptional.isPresent()) {
+            Carpool carpool = carpoolOptional.get();
+            // 업데이트 로직을 수행하고 저장
             carpool.setStart(carpoolDto.getStart());
-        }
-        if (!carpoolDto.getEnd().equals(carpool.getEnd())){
             carpool.setEnd(carpoolDto.getEnd());
-        }
-        if (!carpoolDto.getDate().equals(carpool.getDate())){
             carpool.setDate(carpoolDto.getDate());
-        }
-        if (!(carpoolDto.getMemberNum() ==(carpool.getMemberNum()))){
             carpool.setMemberNum(carpoolDto.getMemberNum());
+            carpoolRepository.save(carpool);
+        } else {
+            throw new IllegalArgumentException("찾을수가 없습니다.");
         }
-        carpoolRepository.save(carpool);
-        return true;
     }
 }
