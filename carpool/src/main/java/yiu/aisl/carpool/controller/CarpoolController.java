@@ -4,9 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import yiu.aisl.carpool.Dto.CarpoolDto;
 import yiu.aisl.carpool.Dto.CarpoolRequest;
@@ -33,6 +36,13 @@ public class CarpoolController {
       @RequestBody CarpoolDto carpoolDto) {
     carpoolService.update(userDetails, carpoolNum, carpoolDto);
     return ResponseEntity.ok("업데이트 성공");
+  }
+
+  @DeleteMapping("/delete/{carpoolNum}")
+  public ResponseEntity<Object> carpoolDelete(
+      @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable int carpoolNum) {
+    carpoolService.delete(userDetails, carpoolNum);
+    return ResponseEntity.ok("삭제 성공");
   }
 
 
