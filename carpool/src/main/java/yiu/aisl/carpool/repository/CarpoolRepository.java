@@ -6,6 +6,6 @@ import yiu.aisl.carpool.domain.Carpool;
 import yiu.aisl.carpool.domain.User;
 
 public interface CarpoolRepository extends JpaRepository<Carpool, String> {
-  Optional<Carpool> findByEmail(String email);
+  Optional<Carpool> findByCarpoolNum(int carpoolNum);
   Optional<Carpool> findByCarpoolNumAndEmail(int carpoolNum, String email);
 }

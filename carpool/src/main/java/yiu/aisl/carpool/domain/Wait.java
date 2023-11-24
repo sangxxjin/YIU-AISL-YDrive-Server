@@ -20,11 +20,14 @@ public class Wait {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int waitNum;
 
-    @Column(nullable = false, name="Carpool")
+    @Column(nullable = false, name="carpoolNum")
     private int carpoolNum;
 
     @Column(nullable = false)
-    private String email;
+    private String guest;
+
+    @Column(nullable = false)
+    private String owner;
 
     @Column(nullable = false)
     private int checkNum;
