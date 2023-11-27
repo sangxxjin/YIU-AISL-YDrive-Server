@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import yiu.aisl.carpool.Dto.CarpoolDto;
 import yiu.aisl.carpool.Dto.CarpoolRequest;
 import yiu.aisl.carpool.Dto.WaitRequest;
+import yiu.aisl.carpool.domain.Carpool;
 import yiu.aisl.carpool.repository.CarpoolRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
 import yiu.aisl.carpool.service.CarpoolService;
@@ -33,7 +34,7 @@ public class CarpoolController {
   @PutMapping("/update/{carpoolNum}")
   public ResponseEntity<Object> carpoolUpdate(
           @AuthenticationPrincipal CustomUserDetails userDetails,
-          @PathVariable int carpoolNum,
+          @PathVariable Integer carpoolNum,
           @RequestBody CarpoolDto carpoolDto) {
     carpoolService.update(userDetails, carpoolNum, carpoolDto);
     return ResponseEntity.ok("업데이트 성공");
@@ -41,13 +42,13 @@ public class CarpoolController {
 
   @DeleteMapping("/delete/{carpoolNum}")
   public ResponseEntity<Object> carpoolDelete(
-          @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable int carpoolNum) {
+          @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Integer carpoolNum) {
     carpoolService.delete(userDetails, carpoolNum);
     return ResponseEntity.ok("삭제 성공");
   }
 
-  @PostMapping("/{carpoolNum}/apply")
-  public ResponseEntity<Boolean> carpoolApply(@RequestBody WaitRequest request, @PathVariable int carpoolNum)
+  @PostMapping("/apply/{carpoolNum}")
+  public ResponseEntity<Boolean> carpoolApply(@RequestBody WaitRequest request, @PathVariable Integer carpoolNum)
           throws  Exception {
     return new ResponseEntity<>(carpoolService.apply(request, carpoolNum), HttpStatus.OK);
   }

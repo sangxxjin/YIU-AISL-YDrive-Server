@@ -2,6 +2,7 @@ package yiu.aisl.carpool.Dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import yiu.aisl.carpool.domain.Carpool;
 
 import java.util.Date;
 
@@ -9,7 +10,7 @@ import java.util.Date;
 @Setter
 public class WaitRequest {
     private int waitNum;
-    private int carpoolNum;
+    private Carpool carpoolNum;
     private String guest;
     private String owner;
     private int checkNum;

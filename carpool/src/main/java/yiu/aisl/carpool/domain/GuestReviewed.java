@@ -21,8 +21,9 @@ public class GuestReviewed {
     @Column(nullable = false)
     private int guestReviewedNum;
 
-    @Column(nullable = false, name="Wait")
-    private int waitNum;
+    @ManyToOne
+    @JoinColumn(nullable = false, name="Wait")
+    private Wait waitNum;
 
     @Column
     private int star;

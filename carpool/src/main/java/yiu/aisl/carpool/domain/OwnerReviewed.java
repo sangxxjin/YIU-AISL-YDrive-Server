@@ -21,8 +21,9 @@ public class OwnerReviewed {
     @Column(nullable = false)
     private int ownerReviewedNum;
 
-    @Column(nullable = false, name="Carpool")
-    private int carpoolNum;
+    @ManyToOne
+    @JoinColumn(nullable = false, name="Carpool")
+    private Carpool carpoolNum;
 
     @Column
     private int star;

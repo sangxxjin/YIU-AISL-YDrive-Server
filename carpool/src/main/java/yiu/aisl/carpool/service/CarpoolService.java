@@ -57,7 +57,7 @@ public class CarpoolService {
     return true;
   }
 
-  public boolean apply(WaitRequest request, int carpoolNum) throws Exception {
+  public boolean apply(WaitRequest request, Integer carpoolNum) throws Exception {
     try {
       SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
       Date date = new Date(System.currentTimeMillis());
@@ -75,7 +75,7 @@ public class CarpoolService {
             if(memberNum > 0) {
               Wait wait = Wait.builder()
                       .waitNum(request.getWaitNum())
-                      .carpoolNum(carpoolNum)
+                      .carpoolNum(carpool)
                       .guest(email)
                       .owner(ownerEmail)
                       .checkNum(request.getCheckNum())
@@ -101,7 +101,7 @@ public class CarpoolService {
     return true;
   }
 
-  public void update(CustomUserDetails userDetails, int carpoolNum, CarpoolDto carpoolDto) {
+  public void update(CustomUserDetails userDetails, Integer carpoolNum, CarpoolDto carpoolDto) {
     String email = userDetails.getUser().getEmail();
     Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum,
         email);
@@ -118,7 +118,7 @@ public class CarpoolService {
     }
   }
 
-  public void delete(CustomUserDetails userDetails, int carpoolNum) {
+  public void delete(CustomUserDetails userDetails, Integer carpoolNum) {
     String email = userDetails.getUser().getEmail();
     Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum,
         email);

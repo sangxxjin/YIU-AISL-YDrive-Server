@@ -20,8 +20,9 @@ public class Wait {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int waitNum;
 
-    @Column(nullable = false, name="carpoolNum")
-    private int carpoolNum;
+    @ManyToOne
+    @JoinColumn(name="carpoolNum", referencedColumnName="carpoolNum")
+    private Carpool carpoolNum;
 
     @Column(nullable = false)
     private String guest;
