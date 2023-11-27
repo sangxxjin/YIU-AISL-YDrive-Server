@@ -1,6 +1,7 @@
 package yiu.aisl.carpool.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import yiu.aisl.carpool.service.UserService;
 
 import jakarta.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 @RestController
 @RequiredArgsConstructor
@@ -67,7 +69,9 @@ public class UserController {
   }
   @GetMapping("/myprofile")
   public ResponseEntity<Object> myprofile(@AuthenticationPrincipal CustomUserDetails userDetails) {
-    return new ResponseEntity<>(userService.getProfile(userDetails), HttpStatus.OK);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+    return new ResponseEntity<>(userService.getProfile(userDetails), headers, HttpStatus.OK);
   }
 
   @PutMapping("/myprofile/update")

@@ -174,7 +174,7 @@ public class UserService {
     if (!myprofileDto.getHome().equals(user.getHome())) {
       user.setHome(myprofileDto.getHome());
     }
-    if (!myprofileDto.getCarNum().equals(user.getCarNum())) {
+    if (myprofileDto.getCarNum() != null && !myprofileDto.getCarNum().equals(user.getCarNum())) {
       user.setCarNum(myprofileDto.getCarNum());
     }
     userRepository.save(user);
