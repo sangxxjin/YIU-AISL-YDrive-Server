@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import yiu.aisl.carpool.Dto.CarpoolDto;
 import yiu.aisl.carpool.Dto.CarpoolRequest;
+import yiu.aisl.carpool.Dto.WaitDto;
 import yiu.aisl.carpool.Dto.WaitRequest;
 import yiu.aisl.carpool.domain.Carpool;
 import yiu.aisl.carpool.domain.Wait;
@@ -97,6 +98,18 @@ public class CarpoolService {
     } catch (DataIntegrityViolationException e) {
       System.out.println(e.getMessage());
       throw new Exception("잘못된 요청입니다.");
+    }
+    return true;
+  }
+  public boolean decide(CustomUserDetails userDetails, Integer carpoolNum, Integer waitNum, WaitDto waitDto){
+    String email = userDetails.getUser().getEmail();
+    Optional<Wait> waitOptional = waitRepository.findByOwnerAndCarpoolNum_CarpoolNumAndWaitNum(email,carpoolNum,waitNum);
+    if (waitOptional.isPresent()){
+      Wait wait = waitOptional.get();
+      wait.setCheckNum(waitDto.getCheckNum());
+      waitRepository.save(wait);
+    }else {
+      throw new IllegalArgumentException("찾을수가 없습니다.");
     }
     return true;
   }
