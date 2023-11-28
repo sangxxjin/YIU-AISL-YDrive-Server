@@ -58,8 +58,14 @@ public class UserService {
 
   public boolean join(SignRequest request) throws Exception {
     try {
+      // 입력된 숫자가 9자리인지 확인
+      if (request.getEmail().length() != 9) {
+        throw new Exception("이메일은 9자리 숫자로 입력되어야 합니다.");
+      }
+      // yiu.ac.kr 추가
+      String modifiedEmail = request.getEmail() + "@yiu.ac.kr";
       User user = User.builder()
-          .email(request.getEmail())
+          .email(modifiedEmail)
           .name(request.getName())
           .phone(request.getPhone())
           .home(request.getHome())
