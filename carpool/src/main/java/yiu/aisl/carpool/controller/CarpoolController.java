@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import yiu.aisl.carpool.Dto.CarpoolDto;
 import yiu.aisl.carpool.Dto.CarpoolRequest;
+import yiu.aisl.carpool.Dto.WaitDto;
 import yiu.aisl.carpool.Dto.WaitRequest;
 import yiu.aisl.carpool.domain.Carpool;
 import yiu.aisl.carpool.repository.CarpoolRepository;
@@ -38,6 +39,14 @@ public class CarpoolController {
           @RequestBody CarpoolDto carpoolDto) {
     carpoolService.update(userDetails, carpoolNum, carpoolDto);
     return ResponseEntity.ok("업데이트 성공");
+  }
+
+  @PutMapping("/accept/{carpoolNum}/{waitNum}")
+  public ResponseEntity<Object> waitDecide(@AuthenticationPrincipal CustomUserDetails userDetails,
+      @PathVariable Integer carpoolNum, @PathVariable Integer waitNum,
+      @RequestBody WaitDto waitDto) {
+    carpoolService.decide(userDetails, carpoolNum, waitNum, waitDto);
+    return ResponseEntity.ok("결정 성공");
   }
 
   @DeleteMapping("/delete/{carpoolNum}")
