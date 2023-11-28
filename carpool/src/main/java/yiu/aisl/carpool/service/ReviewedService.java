@@ -51,6 +51,10 @@ public class ReviewedService {
         if (wait.getCheckNum() != 1 || !wait.getGuest().equals(email)) {
           throw new Exception("리뷰를 작성할 수 없습니다.");
         }
+        int starValue = request.getStar();
+        if (starValue < 1 || starValue > 5) {
+          throw new Exception("start 값은 1에서 5 사이어야 합니다.");
+        }
 
         // 리뷰 작성 처리
         OwnerReviewed ownerReviewed = OwnerReviewed.builder()
