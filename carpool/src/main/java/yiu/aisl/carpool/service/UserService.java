@@ -34,7 +34,11 @@ public class UserService {
 
 
   public SignResponse login(SignRequest request) throws Exception {
-    User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() ->
+
+    // yiu.ac.kr 추가
+    String modifiedEmail = request.getEmail() + "@yiu.ac.kr";
+
+    User user = userRepository.findByEmail(modifiedEmail).orElseThrow(() ->
         new BadCredentialsException("잘못된 계정정보입니다."));
 
     if (!passwordEncoder.matches(request.getPwd(), user.getPwd())) {
