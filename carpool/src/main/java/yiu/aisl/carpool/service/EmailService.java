@@ -66,6 +66,7 @@ public class EmailService {
 
     // 실제 메일 전송
     public String sendEmail(String email) throws  MessagingException, UnsupportedEncodingException {
+        email = email+"@yiu.ac.kr";
         MimeMessage emailForm = createEmailForm(email);
         emailSender.send(emailForm);
 
