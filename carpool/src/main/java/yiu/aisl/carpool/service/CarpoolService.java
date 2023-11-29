@@ -11,6 +11,7 @@ import yiu.aisl.carpool.Dto.CarpoolRequest;
 import yiu.aisl.carpool.Dto.WaitDto;
 import yiu.aisl.carpool.Dto.WaitRequest;
 import yiu.aisl.carpool.domain.Carpool;
+import yiu.aisl.carpool.domain.User;
 import yiu.aisl.carpool.domain.Wait;
 import yiu.aisl.carpool.repository.CarpoolRepository;
 import yiu.aisl.carpool.repository.UserRepository;
