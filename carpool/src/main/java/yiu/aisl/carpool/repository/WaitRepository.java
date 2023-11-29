@@ -11,4 +11,5 @@ public interface WaitRepository extends JpaRepository<Wait, String> {
   Optional<Wait> findByOwnerAndCarpoolNum_CarpoolNumAndWaitNum(String owner, Integer carpoolNum,
       Integer waitNum);
 
+  boolean existsByCarpoolNumAndGuest(Carpool carpool, String email);
 }
