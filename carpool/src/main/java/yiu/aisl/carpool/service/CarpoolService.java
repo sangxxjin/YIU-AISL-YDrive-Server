@@ -80,27 +80,35 @@ public class CarpoolService {
         if(carpoolOptional.isPresent()) {
           Carpool carpool = carpoolOptional.get();
           String ownerEmail = carpool.getEmail();  // 게시물을 작성한 사용자의 이메일
-          if(!email.equals(ownerEmail)) {
-            int memberNum = carpool.getMemberNum();
-            if(memberNum > 0) {
-              Wait wait = Wait.builder()
-                      .waitNum(request.getWaitNum())
-                      .carpoolNum(carpool)
-                      .guest(email)
-                      .owner(ownerEmail)
-                      .checkNum(request.getCheckNum())
-                      .createdAt(date)
-                      .build();
-              waitRepository.save(wait);
 
-              // 게시물의 신청 인원 수 - 1
-              carpool.setMemberNum(memberNum-1);
-              carpoolRepository.save(carpool);
+          // 사용자가 이미 해당 carpoolNum에 대해 신청한 기록이 있는지 확인
+          boolean alreadyApplied = waitRepository.existsByCarpoolNumAndGuest(carpool, email);
+
+          if (!alreadyApplied) {
+            if (!email.equals(ownerEmail)) {
+              int memberNum = carpool.getMemberNum();
+
+              if (memberNum > 0) {
+                Wait wait = Wait.builder()
+                    .waitNum(request.getWaitNum())
+                    .carpoolNum(carpool)
+                    .guest(email)
+                    .owner(ownerEmail)
+                    .checkNum(request.getCheckNum())
+                    .createdAt(date)
+                    .build();
+                waitRepository.save(wait);
+                // 게시물의 신청 인원 수 - 1
+                carpool.setMemberNum(memberNum - 1);
+                carpoolRepository.save(carpool);
+              } else {
+                throw new Exception("신청 인원 초과!!!!!");
+              }
             } else {
-              throw new Exception("신청 인원 초과!!!!!");
+              throw new Exception("본인이 작성한 게시글에는 신청할 수 없음!!!!!");
             }
           } else {
-            throw new Exception("본인이 작성한 게시글에는 신청할 수 없음!!!!!");
+            throw new Exception("이미 해당 게시물에 대해 신청한 기록이 있습니다.");
           }
         }
       }
