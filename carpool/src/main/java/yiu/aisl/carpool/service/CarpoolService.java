@@ -39,6 +39,15 @@ public class CarpoolService {
       if (authHeader != null && authHeader.startsWith("Bearer ")) {
         String token = authHeader.substring(7);
         String email = jwtProvider.getEmail(token);
+
+        // 사용자 정보 조회
+        Optional<User> user = userRepository.findByEmail(email);
+
+        // 여기서 carNum이 null이면 예외 발생
+        if (user.get().getCarNum() == null) {
+          throw new Exception("carNum이 없어서 게시글을 작성할 수 없습니다.");
+        }
+
         Carpool carpool = Carpool.builder()
             .carpoolNum(request.getCarpoolNum())
             .start(request.getStart())
