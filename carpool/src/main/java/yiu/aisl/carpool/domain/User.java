@@ -8,7 +8,6 @@ import lombok.*;
 
 @Entity
 @Data
-@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,8 +29,4 @@ public class User {
   private String carNum;
 
   private String refreshToken;
-
-  public void setRefreshToken(String refreshToken) {
-    this.refreshToken = refreshToken;
-  }
 }

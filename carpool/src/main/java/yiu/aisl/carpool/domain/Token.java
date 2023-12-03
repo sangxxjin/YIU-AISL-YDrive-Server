@@ -2,6 +2,7 @@ package yiu.aisl.carpool.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,7 @@ import org.springframework.data.redis.core.TimeToLive;
 import java.util.concurrent.TimeUnit;
 
 @Getter
+@Setter
 @RedisHash("refreshToken")
 @Builder
 @AllArgsConstructor
@@ -30,7 +32,4 @@ public class Token {
     @TimeToLive(unit = TimeUnit.SECONDS)
     private Integer expiration;
 
-    public void setExpiration(Integer expiration) {
-        this.expiration = expiration;
-    }
 }

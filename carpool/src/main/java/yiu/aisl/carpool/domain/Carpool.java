@@ -43,8 +43,4 @@ public class Carpool {
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
-
-    public void changeMemNum(int memberNum) {
-        this.memberNum = memberNum;
-    }
 }
