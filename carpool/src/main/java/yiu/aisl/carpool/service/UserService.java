@@ -95,7 +95,7 @@ public class UserService {
         // 현재 사용자의 이메일이 맞는지 검사를 못하고 있음
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new Exception("사용자의 이메일이 아닙니다."));
-        user.changePwd(passwordEncoder.encode(request.getPwd()));
+        user.setPwd(passwordEncoder.encode(request.getPwd()));
       }
     } catch (DataIntegrityViolationException e) {
       System.out.println(e.getMessage());
