@@ -104,6 +104,28 @@ public class UserService {
     return true;
   }
 
+  public void delete(CustomUserDetails userDetails, SignRequest request) {
+    String email = userDetails.getUser().getEmail();
+
+    Optional<User> userOptional = userRepository.findByEmail(email);
+
+    if (userOptional.isPresent()) {
+      User user = userOptional.get();
+      String enteredPassword = request.getPwd();
+
+      // 사용자의 비밀번호를 가져와서 입력된 비밀번호와 비교
+      if (passwordEncoder.matches(enteredPassword, user.getPwd())) {
+        userRepository.delete(user);
+      }
+      else {
+        throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+      }
+    } else {
+      throw new IllegalArgumentException("찾을수가 없습니다.");
+    }
+  }
+
+
   public SignResponse getUser(String email) throws Exception {
     User user = userRepository.findByEmail(email)
         .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다."));

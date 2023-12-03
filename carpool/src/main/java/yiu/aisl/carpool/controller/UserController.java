@@ -78,4 +78,10 @@ public class UserController {
   public ResponseEntity<Object> myprofileUpdate(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody MyprofileDto myprofileDto) {
     return new ResponseEntity<>(userService.profileUpdate(userDetails, myprofileDto), HttpStatus.OK);
   }
+
+  @DeleteMapping("/myprofile/delete")
+  public ResponseEntity<Object> userDelete(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody SignRequest request){
+    userService.delete(userDetails,request);
+    return ResponseEntity.ok("회원탈퇴 성공");
+  }
 }
