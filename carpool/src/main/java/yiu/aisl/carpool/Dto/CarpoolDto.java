@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import yiu.aisl.carpool.domain.Carpool;
 
 @Getter
 @Builder
@@ -16,5 +17,10 @@ public class CarpoolDto {
   private LocalDateTime date;
   private int memberNum;
 
-
+  public CarpoolDto(Carpool carpool) {
+    this.start = carpool.getStart();
+    this.end = carpool.getEnd();
+    this.date = carpool.getDate();
+    this.memberNum = carpool.getMemberNum();
+  }
 }
