@@ -1,5 +1,6 @@
 package yiu.aisl.carpool.controller;
 
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -70,7 +71,7 @@ public class UserController {
   @GetMapping("/myprofile")
   public ResponseEntity<Object> myprofile(@AuthenticationPrincipal CustomUserDetails userDetails) {
     HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+    headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
     return new ResponseEntity<>(userService.getProfile(userDetails), headers, HttpStatus.OK);
   }
 

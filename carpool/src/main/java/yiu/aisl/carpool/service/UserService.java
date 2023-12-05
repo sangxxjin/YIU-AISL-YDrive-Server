@@ -35,9 +35,7 @@ public class UserService {
 
   public SignResponse login(SignRequest request) throws Exception {
 
-    // yiu.ac.kr 추가
     String modifiedEmail = request.getEmail() + "@yiu.ac.kr";
-
     User user = userRepository.findByEmail(modifiedEmail).orElseThrow(() ->
         new BadCredentialsException("잘못된 계정정보입니다."));
 
@@ -62,11 +60,10 @@ public class UserService {
 
   public boolean join(SignRequest request) throws Exception {
     try {
-      // 입력된 숫자가 9자리인지 확인
+
       if (request.getEmail().length() != 9) {
         throw new Exception("이메일은 9자리 숫자로 입력되어야 합니다.");
       }
-      // yiu.ac.kr 추가
       String modifiedEmail = request.getEmail() + "@yiu.ac.kr";
       User user = User.builder()
           .email(modifiedEmail)
