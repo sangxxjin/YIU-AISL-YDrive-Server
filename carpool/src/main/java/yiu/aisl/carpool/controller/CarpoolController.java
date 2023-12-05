@@ -1,10 +1,14 @@
 package yiu.aisl.carpool.controller;
 
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,6 +23,7 @@ import yiu.aisl.carpool.domain.Carpool;
 import yiu.aisl.carpool.repository.CarpoolRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
 import yiu.aisl.carpool.service.CarpoolService;
+import yiu.aisl.carpool.service.ScreenService;
 
 @RestController
 @RequestMapping("/carpool")
@@ -26,10 +31,18 @@ import yiu.aisl.carpool.service.CarpoolService;
 public class CarpoolController {
   private final CarpoolRepository carpoolRepository;
   private final CarpoolService carpoolService;
+  private final ScreenService screenService;
   @PostMapping("/create")
   public ResponseEntity<Boolean> carpoolCreate(@RequestBody CarpoolRequest request)
           throws Exception {
     return new ResponseEntity<>(carpoolService.create(request), HttpStatus.OK);
+  }
+
+  @GetMapping("/mycarpool")
+  public ResponseEntity<Object> mycarpool(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+    return new ResponseEntity<>(screenService.getMyCarpool(customUserDetails), headers, HttpStatus.OK);
   }
 
   @PutMapping("/update/{carpoolNum}")
