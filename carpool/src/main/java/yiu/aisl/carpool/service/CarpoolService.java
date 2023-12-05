@@ -2,6 +2,8 @@ package yiu.aisl.carpool.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -155,7 +157,20 @@ public class CarpoolService {
         email);
 
     if (carpoolOptional.isPresent()) {
-      carpoolRepository.delete(carpoolOptional.get());
+      Carpool carpool = carpoolOptional.get();
+
+      // 현재 시간
+      LocalDateTime now = LocalDateTime.now();
+
+      // 차이 계산
+      long hoursDifference = ChronoUnit.HOURS.between(now, carpool.getDate());
+
+      // 차이가 12시간 이상이면 삭제
+      if (Math.abs(hoursDifference) >= 12) {
+        carpoolRepository.delete(carpool);
+      } else {
+        throw new IllegalArgumentException("12시간 이전에 생성된 카풀만 삭제할 수 있습니다.");
+      }
     } else {
       throw new IllegalArgumentException("찾을수가 없습니다.");
     }
