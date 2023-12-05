@@ -187,25 +187,18 @@ public class UserService {
         .carNum(user.get().getCarNum())
         .build();
   }
-  //나중에 void 형식으로 바꿀때 ifPresent() 사용해서 람다식으로 바꾸면 됌
+
   public String profileUpdate(CustomUserDetails userDetails, MyprofileDto myprofileDto) {
     Optional<User> userOptional = userRepository.findByEmail(userDetails.getUser().getEmail());
     if (userOptional.isEmpty()) {
       throw new IllegalArgumentException("User not found");
     }
     User user = userOptional.get();
-    if (!myprofileDto.getName().equals(user.getName())) {
-      user.setName(myprofileDto.getName());
-    }
-    if (!myprofileDto.getPhone().equals(user.getPhone())) {
-      user.setPhone(myprofileDto.getPhone());
-    }
-    if (!myprofileDto.getHome().equals(user.getHome())) {
-      user.setHome(myprofileDto.getHome());
-    }
-    if (myprofileDto.getCarNum() != null && !myprofileDto.getCarNum().equals(user.getCarNum())) {
-      user.setCarNum(myprofileDto.getCarNum());
-    }
+
+    user.setName(myprofileDto.getName());
+    user.setPhone(myprofileDto.getPhone());
+    user.setHome(myprofileDto.getHome());
+    user.setCarNum(myprofileDto.getCarNum());
     userRepository.save(user);
     return "success";
   }
