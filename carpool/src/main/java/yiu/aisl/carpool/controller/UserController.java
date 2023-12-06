@@ -85,4 +85,14 @@ public class UserController {
     userService.delete(userDetails,request);
     return ResponseEntity.ok("회원탈퇴 성공");
   }
+  @PutMapping("/myprofile/ownerMode")
+  public ResponseEntity<Object> ownerMode(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    userService.ownerMode(userDetails);
+    return ResponseEntity.ok("차주 모드 변환(게시물 작성 가능)");
+  }
+  @PutMapping("/myprofile/guestMode")
+  public ResponseEntity<Object> guestMode(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    userService.guestMode(userDetails);
+    return ResponseEntity.ok("탑승자 변환");
+  }
 }

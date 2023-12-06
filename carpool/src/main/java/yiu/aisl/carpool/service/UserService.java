@@ -199,7 +199,29 @@ public class UserService {
     user.setPhone(myprofileDto.getPhone());
     user.setHome(myprofileDto.getHome());
     user.setCarNum(myprofileDto.getCarNum());
+    if (myprofileDto.getCarNum()!=null) user.setStatus(1);
     userRepository.save(user);
     return "success";
+  }
+  public void ownerMode(CustomUserDetails customUserDetails){
+    Optional<User> userOptional = userRepository.findByEmail(customUserDetails.getUser().getEmail());
+    if (userOptional.isEmpty()) {
+      throw new IllegalArgumentException("User not found");
+    }
+    User user = userOptional.get();
+    if (user.getCarNum()==null){
+      throw new IllegalArgumentException("자동차가 없어 차주 모드로 변경이 불가능합니다.");
+    }
+    user.setStatus(1);
+    userRepository.save(user);
+  }
+  public void guestMode(CustomUserDetails customUserDetails){
+    Optional<User> userOptional = userRepository.findByEmail(customUserDetails.getUser().getEmail());
+    if (userOptional.isEmpty()) {
+      throw new IllegalArgumentException("User not found");
+    }
+    User user = userOptional.get();
+    user.setStatus(0);
+    userRepository.save(user);
   }
 }
