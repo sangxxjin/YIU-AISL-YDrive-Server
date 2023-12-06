@@ -27,6 +27,8 @@ public class User {
   private String pwd;
   @Column
   private String carNum;
+  @Column
+  private int status;
 
   private String refreshToken;
 }

@@ -73,7 +73,7 @@ public class UserService {
           .pwd(passwordEncoder.encode(request.getPwd()))
           .carNum(request.getCarNum())
           .build();
-
+      if (request.getCarNum()!=null)user.setStatus(1);
       userRepository.save(user);
     } catch (DataIntegrityViolationException e) {
       System.out.println(e.getMessage());

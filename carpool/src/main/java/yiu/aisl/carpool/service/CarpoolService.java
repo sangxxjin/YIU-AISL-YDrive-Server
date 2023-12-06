@@ -47,7 +47,7 @@ public class CarpoolService {
         Optional<User> user = userRepository.findByEmail(email);
 
         // 여기서 carNum이 null이면 예외 발생
-        if (user.get().getCarNum() == null) {
+        if (user.get().getStatus() == 0) {
           throw new Exception("carNum이 없어서 게시글을 작성할 수 없습니다.");
         }
 
