@@ -2,22 +2,25 @@ package yiu.aisl.carpool.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import yiu.aisl.carpool.Dto.MyprofileDto;
-import yiu.aisl.carpool.Dto.PwdRequest;
-import yiu.aisl.carpool.Dto.TokenDto;
+import yiu.aisl.carpool.Dto.*;
 import yiu.aisl.carpool.domain.Token;
+import yiu.aisl.carpool.domain.Wait;
 import yiu.aisl.carpool.repository.TokenRepository;
+import yiu.aisl.carpool.repository.WaitRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
 import yiu.aisl.carpool.security.JwtProvider;
-import yiu.aisl.carpool.Dto.SignRequest;
-import yiu.aisl.carpool.Dto.SignResponse;
 import yiu.aisl.carpool.domain.User;
 import yiu.aisl.carpool.repository.UserRepository;
 
@@ -31,6 +34,7 @@ public class UserService {
   private final JwtProvider jwtProvider;
   private final TokenRepository tokenRepository;
   private final HttpServletRequest httpServletRequest;
+  private final WaitRepository waitRepository;
 
 
   public SignResponse login(SignRequest request) throws Exception {
@@ -234,5 +238,13 @@ public class UserService {
     } else {
       throw new IllegalArgumentException("User not found");
     }
+  }
+
+  public List<GuestUseInfoResponse> getGuestList(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    String email = userDetails.getUsername();
+    List<Wait> waits = waitRepository.findByCheckNumAndGuestWithCarpool(email);
+    return waits.stream()
+            .map(GuestUseInfoResponse::new)
+            .collect(Collectors.toList());
   }
 }

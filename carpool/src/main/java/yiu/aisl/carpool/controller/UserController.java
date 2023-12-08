@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import yiu.aisl.carpool.Dto.*;
+import yiu.aisl.carpool.domain.Wait;
 import yiu.aisl.carpool.repository.UserRepository;
+import yiu.aisl.carpool.repository.WaitRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
 import yiu.aisl.carpool.service.EmailService;
 import yiu.aisl.carpool.service.UserService;
@@ -17,12 +19,15 @@ import yiu.aisl.carpool.service.UserService;
 import jakarta.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 public class UserController {
 
   private final UserRepository userRepository;
+  private final WaitRepository waitRepository;
   private final UserService userService;
   private final EmailService emailService;
 
@@ -94,5 +99,12 @@ public class UserController {
   public ResponseEntity<Object> guestMode(@AuthenticationPrincipal CustomUserDetails userDetails) {
     userService.guestMode(userDetails);
     return ResponseEntity.ok("탑승자 변환");
+  }
+
+  @GetMapping("/list/guest")
+  public ResponseEntity<Object> getGuestList(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+    return new ResponseEntity<>(userService.getGuestList(userDetails), headers, HttpStatus.OK);
   }
 }

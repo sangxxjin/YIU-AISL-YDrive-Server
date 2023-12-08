@@ -30,8 +30,8 @@ public class ScreenService {
         List<Carpool> myCarpools = carpoolRepository.findByEmail(userEmail);
         // 찾은 카풀들을 CarpoolResponse로 매핑하여 리스트로 반환
         return myCarpools.stream()
-            .map(CarpoolResponse::new)
-            .collect(Collectors.toList());
+                .map(CarpoolResponse::new)
+                .collect(Collectors.toList());
     }
 
 }
