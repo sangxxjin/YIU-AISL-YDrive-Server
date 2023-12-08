@@ -76,7 +76,7 @@ public class UserService {
           .email(modifiedEmail)
           .name(request.getName())
           .phone(request.getPhone())
-          .home(request.getHome())
+          .home(request.getCity() + " " + request.getDistrict())
           .pwd(passwordEncoder.encode(request.getPwd()))
           .carNum(request.getCarNum())
           .build();

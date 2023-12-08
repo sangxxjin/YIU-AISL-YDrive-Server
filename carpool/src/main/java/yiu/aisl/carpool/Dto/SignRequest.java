@@ -13,7 +13,9 @@ public class SignRequest {
 
   private String phone;
 
-  private String home;
+  private String city;
+
+  private String district;
 
   private String pwd;
 
