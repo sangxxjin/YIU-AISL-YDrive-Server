@@ -8,8 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
-
 @Entity
 @Data
 @Builder
@@ -42,5 +40,5 @@ public class Carpool {
 
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 }

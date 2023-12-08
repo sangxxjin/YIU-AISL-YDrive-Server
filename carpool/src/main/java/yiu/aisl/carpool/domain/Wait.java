@@ -1,13 +1,12 @@
 package yiu.aisl.carpool.domain;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import java.util.Date;
 
 @Entity
 @Data
@@ -35,6 +34,6 @@ public class Wait {
 
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 }
 

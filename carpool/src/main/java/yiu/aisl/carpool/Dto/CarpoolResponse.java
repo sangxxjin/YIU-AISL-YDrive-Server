@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import yiu.aisl.carpool.domain.Carpool;
 
-import java.util.Date;
-
 @Getter
 @Builder
 @AllArgsConstructor
@@ -21,7 +19,7 @@ public class CarpoolResponse {
     private int memberNum;
     private String email;
     private int checkNum;
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     public CarpoolResponse(Carpool carpool) {
         this.carpoolNum = carpool.getCarpoolNum();

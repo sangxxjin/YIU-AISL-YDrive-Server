@@ -1,10 +1,9 @@
 package yiu.aisl.carpool.Dto;
 
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import yiu.aisl.carpool.domain.Carpool;
-
-import java.util.Date;
 
 @Getter
 @Setter
@@ -14,5 +13,5 @@ public class WaitRequest {
     private String guest;
     private String owner;
     private int checkNum;
-    private Date createdAt;
+    private LocalDateTime createdAt;
 }

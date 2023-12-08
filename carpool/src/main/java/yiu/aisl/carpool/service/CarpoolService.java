@@ -21,8 +21,6 @@ import yiu.aisl.carpool.repository.WaitRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
 import yiu.aisl.carpool.security.JwtProvider;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Service
 @Transactional
@@ -36,8 +34,7 @@ public class CarpoolService {
 
   public boolean create(CarpoolRequest request) throws Exception {
     try {
-      SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
-      Date date = new Date(System.currentTimeMillis());
+      LocalDateTime createdAt = LocalDateTime.now();
       String authHeader = httpServletRequest.getHeader("Authorization");
       if (authHeader != null && authHeader.startsWith("Bearer ")) {
         String token = authHeader.substring(7);
@@ -46,34 +43,35 @@ public class CarpoolService {
         // 사용자 정보 조회
         Optional<User> user = userRepository.findByEmail(email);
 
-        // 여기서 carNum이 null이면 예외 발생
-        if (user.get().getStatus() == 0) {
-          throw new Exception("carNum이 없어서 게시글을 작성할 수 없습니다.");
-        }
-
-        Carpool carpool = Carpool.builder()
-            .carpoolNum(request.getCarpoolNum())
-            .start(request.getStart())
-            .end(request.getEnd())
-            .date(request.getDate())
-            .checkNum(request.getCheckNum())
-            .memberNum(request.getMemberNum())
-            .email(email)
-            .createdAt(date)
-            .build();
-        carpoolRepository.save(carpool);
+        if (user.isPresent()) {
+          if (user.get().getStatus() == 0) {
+            throw new IllegalArgumentException("차주 모드로 변경해 주세요.");
+          }
+          else {
+            Carpool carpool = Carpool.builder()
+                .carpoolNum(request.getCarpoolNum())
+                .start(request.getStart())
+                .end(request.getEnd())
+                .date(request.getDate())
+                .checkNum(request.getCheckNum())
+                .memberNum(request.getMemberNum())
+                .email(email)
+                .createdAt(createdAt)
+                .build();
+            carpoolRepository.save(carpool);
+          }
+        }else throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
       }
     } catch (DataIntegrityViolationException e) {
       System.out.println(e.getMessage());
-      throw new Exception("잘못된 요청입니다.");
+      throw new IllegalArgumentException("잘못된 요청입니다.");
     }
     return true;
   }
 
   public boolean apply(WaitRequest request, Integer carpoolNum) throws Exception {
     try {
-      SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
-      Date date = new Date(System.currentTimeMillis());
+      LocalDateTime createdAt = LocalDateTime.now();
       String authHeader = httpServletRequest.getHeader("Authorization");
 
       if(authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -90,7 +88,6 @@ public class CarpoolService {
           if (!alreadyApplied) {
             if (!email.equals(ownerEmail)) {
               int memberNum = carpool.getMemberNum();
-
               if (memberNum > 0) {
                 Wait wait = Wait.builder()
                     .waitNum(request.getWaitNum())
@@ -98,26 +95,26 @@ public class CarpoolService {
                     .guest(email)
                     .owner(ownerEmail)
                     .checkNum(request.getCheckNum())
-                    .createdAt(date)
+                    .createdAt(createdAt)
                     .build();
                 waitRepository.save(wait);
                 // 게시물의 신청 인원 수 - 1
                 carpool.setMemberNum(memberNum - 1);
                 carpoolRepository.save(carpool);
               } else {
-                throw new Exception("신청 인원 초과!!!!!");
+                throw new IllegalArgumentException("신청 인원 초과!!!!!");
               }
             } else {
-              throw new Exception("본인이 작성한 게시글에는 신청할 수 없음!!!!!");
+              throw new IllegalArgumentException("본인이 작성한 게시글에는 신청할 수 없음!!!!!");
             }
           } else {
-            throw new Exception("이미 해당 게시물에 대해 신청한 기록이 있습니다.");
+            throw new IllegalArgumentException("이미 해당 게시물에 대해 신청한 기록이 있습니다.");
           }
         }
       }
     } catch (DataIntegrityViolationException e) {
       System.out.println(e.getMessage());
-      throw new Exception("잘못된 요청입니다.");
+      throw new IllegalArgumentException("잘못된 요청입니다.");
     }
     return true;
   }

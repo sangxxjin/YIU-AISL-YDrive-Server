@@ -62,7 +62,7 @@ public class UserService {
     try {
 
       if (request.getEmail().length() != 9) {
-        throw new Exception("이메일은 9자리 숫자로 입력되어야 합니다.");
+        throw new IllegalArgumentException("이메일은 9자리 숫자로 입력되어야 합니다.");
       }
       String modifiedEmail = request.getEmail() + "@yiu.ac.kr";
       User user = User.builder()
@@ -73,11 +73,13 @@ public class UserService {
           .pwd(passwordEncoder.encode(request.getPwd()))
           .carNum(request.getCarNum())
           .build();
-      if (request.getCarNum()!=null)user.setStatus(1);
+      if (request.getCarNum() != null) {
+        user.setStatus(1);
+      }
       userRepository.save(user);
     } catch (DataIntegrityViolationException e) {
       System.out.println(e.getMessage());
-      throw new Exception("잘못된 요청입니다.");
+      throw new IllegalArgumentException("잘못된 요청입니다.");
     }
     return true;
   }
@@ -96,7 +98,7 @@ public class UserService {
       }
     } catch (DataIntegrityViolationException e) {
       System.out.println(e.getMessage());
-      throw new Exception("잘못된 요청입니다.");
+      throw new IllegalArgumentException("잘못된 요청입니다.");
     }
     return true;
   }
@@ -113,8 +115,7 @@ public class UserService {
       // 사용자의 비밀번호를 가져와서 입력된 비밀번호와 비교
       if (passwordEncoder.matches(enteredPassword, user.getPwd())) {
         userRepository.delete(user);
-      }
-      else {
+      } else {
         throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
       }
     } else {
@@ -174,7 +175,7 @@ public class UserService {
           .refresh_token(refreshToken.getRefresh_token())
           .build();
     } else {
-      throw new Exception("로그인을 해주세요");
+      throw new IllegalArgumentException("로그인을 해주세요");
     }
   }
 
@@ -190,38 +191,48 @@ public class UserService {
 
   public String profileUpdate(CustomUserDetails userDetails, MyprofileDto myprofileDto) {
     Optional<User> userOptional = userRepository.findByEmail(userDetails.getUser().getEmail());
-    if (userOptional.isEmpty()) {
-      throw new IllegalArgumentException("User not found");
-    }
-    User user = userOptional.get();
+    if (userOptional.isPresent()) {
+      User user = userOptional.get();
 
-    user.setName(myprofileDto.getName());
-    user.setPhone(myprofileDto.getPhone());
-    user.setHome(myprofileDto.getHome());
-    user.setCarNum(myprofileDto.getCarNum());
-    if (myprofileDto.getCarNum()!=null) user.setStatus(1);
-    userRepository.save(user);
-    return "success";
-  }
-  public void ownerMode(CustomUserDetails customUserDetails){
-    Optional<User> userOptional = userRepository.findByEmail(customUserDetails.getUser().getEmail());
-    if (userOptional.isEmpty()) {
+      user.setName(myprofileDto.getName());
+      user.setPhone(myprofileDto.getPhone());
+      user.setHome(myprofileDto.getHome());
+      user.setCarNum(myprofileDto.getCarNum());
+      if (myprofileDto.getCarNum() != null) {
+        user.setStatus(1);
+      }
+      userRepository.save(user);
+      return "success";
+
+    } else {
       throw new IllegalArgumentException("User not found");
     }
-    User user = userOptional.get();
-    if (user.getCarNum()==null){
-      throw new IllegalArgumentException("자동차가 없어 차주 모드로 변경이 불가능합니다.");
-    }
-    user.setStatus(1);
-    userRepository.save(user);
   }
-  public void guestMode(CustomUserDetails customUserDetails){
-    Optional<User> userOptional = userRepository.findByEmail(customUserDetails.getUser().getEmail());
-    if (userOptional.isEmpty()) {
+
+  public void ownerMode(CustomUserDetails customUserDetails) {
+    Optional<User> userOptional = userRepository.findByEmail(
+        customUserDetails.getUser().getEmail());
+    if (userOptional.isPresent()) {
+      User user = userOptional.get();
+      if (user.getCarNum() == null) {
+        throw new IllegalArgumentException("자동차가 없어 차주 모드로 변경이 불가능합니다.");
+      }
+      user.setStatus(1);
+      userRepository.save(user);
+    } else {
       throw new IllegalArgumentException("User not found");
     }
-    User user = userOptional.get();
-    user.setStatus(0);
-    userRepository.save(user);
+  }
+
+  public void guestMode(CustomUserDetails customUserDetails) {
+    Optional<User> userOptional = userRepository.findByEmail(
+        customUserDetails.getUser().getEmail());
+    if (userOptional.isPresent()) {
+      User user = userOptional.get();
+      user.setStatus(0);
+      userRepository.save(user);
+    } else {
+      throw new IllegalArgumentException("User not found");
+    }
   }
 }

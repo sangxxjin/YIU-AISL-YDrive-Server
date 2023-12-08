@@ -1,5 +1,5 @@
 package yiu.aisl.carpool.Dto;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +10,6 @@ public class OwnerReviewedRequest {
   private int carpoolNum;
   private int star;
   private String review;
-  private Date createdAt;
+  private LocalDateTime createdAt;
   private String email;
 }

@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Getter
 @Setter
 public class CarpoolRequest {
@@ -16,5 +14,5 @@ public class CarpoolRequest {
     private int memberNum;
     private String email;
     private int checkNum;
-    private Date createdAt;
+    private LocalDateTime createdAt;
 }
