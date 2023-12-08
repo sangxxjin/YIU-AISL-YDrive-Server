@@ -107,4 +107,11 @@ public class UserController {
     headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
     return new ResponseEntity<>(userService.getGuestList(userDetails), headers, HttpStatus.OK);
   }
+
+  @GetMapping("/list/owner")
+  public ResponseEntity<Object> getOwnerList(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+    return new ResponseEntity<>(userService.getOwnerList(userDetails), headers, HttpStatus.OK);
+  }
 }

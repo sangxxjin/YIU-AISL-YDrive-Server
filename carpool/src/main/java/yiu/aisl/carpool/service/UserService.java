@@ -15,8 +15,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import yiu.aisl.carpool.Dto.*;
+import yiu.aisl.carpool.domain.Carpool;
 import yiu.aisl.carpool.domain.Token;
 import yiu.aisl.carpool.domain.Wait;
+import yiu.aisl.carpool.repository.CarpoolRepository;
 import yiu.aisl.carpool.repository.TokenRepository;
 import yiu.aisl.carpool.repository.WaitRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
@@ -35,6 +37,7 @@ public class UserService {
   private final TokenRepository tokenRepository;
   private final HttpServletRequest httpServletRequest;
   private final WaitRepository waitRepository;
+  private final CarpoolRepository carpoolRepository;
 
 
   public SignResponse login(SignRequest request) throws Exception {
@@ -245,6 +248,14 @@ public class UserService {
     List<Wait> waits = waitRepository.findByCheckNumAndGuestWithCarpool(email);
     return waits.stream()
             .map(GuestUseInfoResponse::new)
+            .collect(Collectors.toList());
+  }
+
+  public List<OwnerUseInfoResponse> getOwnerList(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    String email = userDetails.getUsername();
+    List<Carpool> carpools = carpoolRepository.findByCheckNumAndOwnerWithCarpool(email);
+    return carpools.stream()
+            .map(OwnerUseInfoResponse::new)
             .collect(Collectors.toList());
   }
 }
