@@ -3,11 +3,17 @@ package yiu.aisl.carpool.service;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import yiu.aisl.carpool.Dto.GuestReviewedRequest;
+import yiu.aisl.carpool.Dto.GuestReviewedResponse;
 import yiu.aisl.carpool.Dto.OwnerReviewedRequest;
+import yiu.aisl.carpool.Dto.OwnerReviewedResponse;
 import yiu.aisl.carpool.domain.GuestReviewed;
 import yiu.aisl.carpool.domain.OwnerReviewed;
 import yiu.aisl.carpool.domain.Wait;
@@ -15,6 +21,7 @@ import yiu.aisl.carpool.repository.CarpoolRepository;
 import yiu.aisl.carpool.repository.GuestReviewdRepository;
 import yiu.aisl.carpool.repository.OwnerReviewdRepository;
 import yiu.aisl.carpool.repository.WaitRepository;
+import yiu.aisl.carpool.security.CustomUserDetails;
 import yiu.aisl.carpool.security.JwtProvider;
 
 @Service
@@ -117,5 +124,21 @@ public class ReviewedService {
       throw new IllegalArgumentException("리뷰 작성에 실패했습니다.");
     }
     return true; // 리뷰 작성 성공
+  }
+
+  public List<GuestReviewedResponse> getGuestReview(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    String userEmail = userDetails.getUser().getEmail();
+    List<GuestReviewed> myReviews = guestReviewdRepository.findByEmail(userEmail);
+    return myReviews.stream()
+            .map(GuestReviewedResponse::new)
+            .collect(Collectors.toList());
+  }
+
+  public List<OwnerReviewedResponse> getOwnerReview(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    String userEmail = userDetails.getUser().getEmail();
+    List<OwnerReviewed> myReviews = ownerReviewdRepository.findByEmail(userEmail);
+    return myReviews.stream()
+            .map(OwnerReviewedResponse::new)
+            .collect(Collectors.toList());
   }
 }

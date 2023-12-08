@@ -1,17 +1,19 @@
 package yiu.aisl.carpool.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 import yiu.aisl.carpool.Dto.GuestReviewedRequest;
 import yiu.aisl.carpool.Dto.OwnerReviewedRequest;
 import yiu.aisl.carpool.repository.OwnerReviewdRepository;
+import yiu.aisl.carpool.security.CustomUserDetails;
 import yiu.aisl.carpool.service.ReviewedService;
+
+import java.nio.charset.Charset;
 
 @RestController
 @RequestMapping()
@@ -37,5 +39,17 @@ public class ReviewedController {
     return new ResponseEntity<>(reviewedService.guestReviewed(carpoolNum,waitNum,request), HttpStatus.OK);
   }
 
+  @GetMapping("/list/review/owner")
+  public ResponseEntity<Object> getOwnerReview(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+    return new ResponseEntity<>(reviewedService.getOwnerReview(userDetails), headers, HttpStatus.OK);
+  }
 
+  @GetMapping("/list/review/guest")
+  public ResponseEntity<Object> getGuestReview(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+    return new ResponseEntity<>(reviewedService.getGuestReview(userDetails), headers, HttpStatus.OK);
+  }
 }
