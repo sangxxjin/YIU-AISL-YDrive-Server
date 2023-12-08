@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
 public class GuestUseInfoResponse {
     private String start;
     private String end;
-    private LocalDateTime createdAt;
+    private LocalDateTime date;
 
     public GuestUseInfoResponse(Wait wait) {
         this.start = wait.getCarpoolNum().getStart();
         this.end = wait.getCarpoolNum().getEnd();
-        this.createdAt= wait.getCreatedAt();
+        this.date= wait.getCarpoolNum().getDate();
     }
 }
