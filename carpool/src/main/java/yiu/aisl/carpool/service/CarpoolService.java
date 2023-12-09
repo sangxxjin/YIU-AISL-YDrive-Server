@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -133,6 +134,27 @@ public class CarpoolService {
     }
     return true;
   }
+  public boolean carpoolFinish(CustomUserDetails userDetails, Integer carpoolNum) {
+    String email = userDetails.getUser().getEmail();
+    Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email);
+    if (carpoolOptional.isPresent()) {
+      Carpool carpool = carpoolOptional.get();
+      // 자신의 게시물이 맞으면 해당 게시물에 대한 모든 wait 엔티티 가져오기
+      List<Wait> waits = waitRepository.findByCarpoolNum(carpool);
+      for (Wait wait : waits) {
+        // 자신의 checkNum이 1인 경우에 checkNum을 3으로 변경
+        if (wait.getCheckNum() == 1) {
+          wait.setCheckNum(3);
+          waitRepository.save(wait);
+        }
+      }
+    } else {
+      throw new IllegalArgumentException("찾을 수 없거나 권한이 없습니다.");
+    }
+
+    return true;
+  }
+
 
   public void update(CustomUserDetails userDetails, Integer carpoolNum, CarpoolDto carpoolDto) {
     String email = userDetails.getUser().getEmail();

@@ -18,4 +18,6 @@ public interface WaitRepository extends JpaRepository<Wait, String> {
 
   @Query("SELECT w FROM Wait w JOIN FETCH w.carpoolNum c WHERE w.checkNum = 3 AND w.guest = :email")
   List<Wait> findByCheckNumAndGuestWithCarpool(@Param("email") String email);
+
+  List<Wait> findByCarpoolNum(Carpool carpool);
 }

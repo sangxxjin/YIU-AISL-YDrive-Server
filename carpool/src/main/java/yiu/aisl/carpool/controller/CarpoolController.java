@@ -74,4 +74,11 @@ public class CarpoolController {
           throws  Exception {
     return new ResponseEntity<>(carpoolService.apply(request, carpoolNum), HttpStatus.OK);
   }
+
+  @PostMapping("/{carpoolNum}/finish")
+  public ResponseEntity<String> carpoolFinish(
+      @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Integer carpoolNum) {
+    carpoolService.carpoolFinish(userDetails, carpoolNum);
+    return ResponseEntity.ok("도착");
+  }
 }
