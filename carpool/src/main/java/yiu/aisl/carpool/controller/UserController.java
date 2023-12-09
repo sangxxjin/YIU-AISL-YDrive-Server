@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import yiu.aisl.carpool.Dto.*;
-import yiu.aisl.carpool.domain.Wait;
 import yiu.aisl.carpool.repository.UserRepository;
 import yiu.aisl.carpool.repository.WaitRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
@@ -18,10 +17,6 @@ import yiu.aisl.carpool.service.UserService;
 
 import jakarta.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
 @RequiredArgsConstructor
 public class UserController {

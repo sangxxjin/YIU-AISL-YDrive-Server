@@ -1,5 +1,6 @@
 package yiu.aisl.carpool.controller;
 
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,8 +13,6 @@ import yiu.aisl.carpool.Dto.OwnerReviewedRequest;
 import yiu.aisl.carpool.repository.OwnerReviewdRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
 import yiu.aisl.carpool.service.ReviewedService;
-
-import java.nio.charset.Charset;
 
 @RestController
 @RequestMapping()
@@ -42,14 +41,14 @@ public class ReviewedController {
   @GetMapping("/list/review/owner")
   public ResponseEntity<Object> getOwnerReview(@AuthenticationPrincipal CustomUserDetails userDetails) {
     HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+    headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
     return new ResponseEntity<>(reviewedService.getOwnerReview(userDetails), headers, HttpStatus.OK);
   }
 
   @GetMapping("/list/review/guest")
   public ResponseEntity<Object> getGuestReview(@AuthenticationPrincipal CustomUserDetails userDetails) {
     HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+    headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
     return new ResponseEntity<>(reviewedService.getGuestReview(userDetails), headers, HttpStatus.OK);
   }
 }
