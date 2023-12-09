@@ -98,9 +98,6 @@ public class CarpoolService {
                     .createdAt(createdAt)
                     .build();
                 waitRepository.save(wait);
-                // 게시물의 신청 인원 수 - 1
-                carpool.setMemberNum(memberNum - 1);
-                carpoolRepository.save(carpool);
               } else {
                 throw new IllegalArgumentException("신청 인원 초과!!!!!");
               }
@@ -121,10 +118,16 @@ public class CarpoolService {
   public boolean decide(CustomUserDetails userDetails, Integer carpoolNum, Integer waitNum, WaitDto waitDto){
     String email = userDetails.getUser().getEmail();
     Optional<Wait> waitOptional = waitRepository.findByOwnerAndCarpoolNum_CarpoolNumAndWaitNum(email,carpoolNum,waitNum);
+    Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNum(carpoolNum);
+    Carpool carpool = carpoolOptional.get();
     if (waitOptional.isPresent()){
       Wait wait = waitOptional.get();
       wait.setCheckNum(waitDto.getCheckNum());
+      if (waitDto.getCheckNum()==1)
+        // 게시물의 신청 인원 수 - 1
+        carpool.setMemberNum(carpool.getMemberNum() - 1);
       waitRepository.save(wait);
+      carpoolRepository.save(carpool);
     }else {
       throw new IllegalArgumentException("찾을수가 없습니다.");
     }
