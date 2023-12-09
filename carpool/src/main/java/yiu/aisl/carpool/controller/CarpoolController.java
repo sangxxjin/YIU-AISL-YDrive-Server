@@ -1,6 +1,7 @@
 package yiu.aisl.carpool.controller;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import yiu.aisl.carpool.Dto.CarpoolDto;
 import yiu.aisl.carpool.Dto.CarpoolRequest;
 import yiu.aisl.carpool.Dto.WaitDto;
 import yiu.aisl.carpool.Dto.WaitRequest;
+import yiu.aisl.carpool.domain.Wait;
 import yiu.aisl.carpool.repository.CarpoolRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
 import yiu.aisl.carpool.service.CarpoolService;
@@ -79,5 +81,10 @@ public class CarpoolController {
       @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Integer carpoolNum) {
     carpoolService.carpoolFinish(userDetails, carpoolNum);
     return ResponseEntity.ok("도착");
+  }
+
+  @GetMapping("/{carpoolNum}/apply-list")
+  public List<Wait> getWaitList(@PathVariable Integer carpoolNum,@AuthenticationPrincipal CustomUserDetails userDetails) {
+    return screenService.getWaitList(carpoolNum, userDetails);
   }
 }
