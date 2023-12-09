@@ -116,7 +116,7 @@ public class CarpoolService {
     }
     return true;
   }
-  public boolean decide(CustomUserDetails userDetails, Integer carpoolNum, Integer waitNum, WaitDto waitDto){
+  public void decide(CustomUserDetails userDetails, Integer carpoolNum, Integer waitNum, WaitDto waitDto){
     String email = userDetails.getUser().getEmail();
     Optional<Wait> waitOptional = waitRepository.findByOwnerAndCarpoolNum_CarpoolNumAndWaitNum(email,carpoolNum,waitNum);
     Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNum(carpoolNum);
@@ -132,9 +132,8 @@ public class CarpoolService {
     }else {
       throw new IllegalArgumentException("찾을수가 없습니다.");
     }
-    return true;
   }
-  public boolean carpoolFinish(CustomUserDetails userDetails, Integer carpoolNum) {
+  public void carpoolFinish(CustomUserDetails userDetails, Integer carpoolNum) {
     String email = userDetails.getUser().getEmail();
     Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email);
     if (carpoolOptional.isPresent()) {
@@ -151,8 +150,6 @@ public class CarpoolService {
     } else {
       throw new IllegalArgumentException("찾을 수 없거나 권한이 없습니다.");
     }
-
-    return true;
   }
 
 
