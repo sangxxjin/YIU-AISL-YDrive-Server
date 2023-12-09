@@ -52,8 +52,8 @@ public class ReviewedService {
         }
         Wait wait = waitOptional.get();
 
-        // checkNum이 1인지 확인하고 현재 사용자가 guest인지 확인하여 리뷰 작성 허용 여부 판단
-        if (wait.getCheckNum() != 1 || !wait.getGuest().equals(email)) {
+        // checkNum이 3인지 확인하고 현재 사용자가 guest인지 확인하여 리뷰 작성 허용 여부 판단
+        if (wait.getCheckNum() != 3 || !wait.getGuest().equals(email)) {
           throw new IllegalArgumentException("리뷰를 작성할 수 없습니다.");
         }
         int starValue = request.getStar();
@@ -98,8 +98,8 @@ public class ReviewedService {
         }
         Wait wait = waitOptional.get();
 
-        // checkNum이 1인지 확인하고 현재 사용자가 owner인지 확인하여 리뷰 작성 허용 여부 판단
-        if (wait.getCheckNum() != 1 || !wait.getOwner().equals(email)) {
+        // checkNum이 3인지 확인하고 현재 사용자가 owner인지 확인하여 리뷰 작성 허용 여부 판단
+        if (wait.getCheckNum() != 3 || !wait.getOwner().equals(email)) {
           throw new IllegalArgumentException("리뷰를 작성할 수 없습니다.");
         }
         int starValue = request.getStar();
