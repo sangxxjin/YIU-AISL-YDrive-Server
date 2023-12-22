@@ -195,6 +195,12 @@ public class UserService {
         .carNum(user.get().getCarNum())
         .build();
   }
+  public Object getUserStatus(CustomUserDetails userDetails){
+    Optional<User> user = userRepository.findByEmail(userDetails.getUser().getEmail());
+    return UserStateDto.builder()
+        .state(user.get().getStatus())
+        .build();
+  }
 
   public String profileUpdate(CustomUserDetails userDetails, MyprofileDto myprofileDto) {
     Optional<User> userOptional = userRepository.findByEmail(userDetails.getUser().getEmail());

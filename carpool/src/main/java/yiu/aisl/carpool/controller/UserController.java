@@ -39,6 +39,10 @@ public class UserController {
   public ResponseEntity<SignResponse> getUser(@RequestParam String email) throws Exception {
     return new ResponseEntity<>( userService.getUser(email), HttpStatus.OK);
   }
+  @GetMapping("/user/getStatus")
+  public ResponseEntity<Object> getUserStatus(@AuthenticationPrincipal CustomUserDetails userDetails) throws Exception{
+    return new ResponseEntity<>(userService.getUserStatus(userDetails),HttpStatus.OK);
+  }
 
   @GetMapping("/admin/get")
   public ResponseEntity<SignResponse> getUserForAdmin(@RequestParam String email) throws Exception {
