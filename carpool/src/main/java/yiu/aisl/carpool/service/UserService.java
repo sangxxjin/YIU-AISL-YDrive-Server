@@ -18,6 +18,8 @@ import yiu.aisl.carpool.Dto.*;
 import yiu.aisl.carpool.domain.Carpool;
 import yiu.aisl.carpool.domain.Token;
 import yiu.aisl.carpool.domain.Wait;
+import yiu.aisl.carpool.exception.CustomException;
+import yiu.aisl.carpool.exception.ErrorCode;
 import yiu.aisl.carpool.repository.CarpoolRepository;
 import yiu.aisl.carpool.repository.TokenRepository;
 import yiu.aisl.carpool.repository.WaitRepository;
@@ -66,6 +68,14 @@ public class UserService {
   }
 
   public boolean join(SignRequest request) throws Exception {
+    // 데이터 없음
+    if(request.getEmail() == null || request.getPwd() == null || request.getDistrict() == null)
+      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+
+    // 이미 존재하는 학번
+    if(userRepository.findByEmail(request.getEmail()+"@yiu.ac.kr").isPresent())
+      throw new CustomException(ErrorCode.DUPLICATE);
+
     try {
 
       if (request.getEmail().length() != 9) {
