@@ -11,6 +11,7 @@ public enum ErrorCode {
 
     VALID_NOT_STUDENT_ID(401, ResultMessage.VALID_NOT_STUDENT_ID),
     VALID_NOT_PWD(401, ResultMessage.VALID_NOT_PWD),
+    MEMBER_NOT_EXIST(401, ResultMessage.MEMBER_NOT_EXIST),
 
     // 데이터를 찾을 수 없음
     NOT_EXIST(404, ResultMessage.NOT_EXIST),
@@ -44,6 +45,7 @@ public enum ErrorCode {
         String VALID_NOT_STUDENT_ID = "가입하지 않은 학번";
         String VALID_NOT_PWD = "잘못된 비밀번호";
         String INSUFFICIENT_DATA = "데이터 부족";
+        String MEMBER_NOT_EXIST = "존재하지 않는 사용자";
         String NOT_EXIST = "존재하지 않음";
         String CONFLICT = "데이터 충돌";
         String DUPLICATE = "데이터 중복";

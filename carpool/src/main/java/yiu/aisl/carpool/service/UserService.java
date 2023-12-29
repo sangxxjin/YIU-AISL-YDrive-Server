@@ -43,13 +43,15 @@ public class UserService {
 
 
   public SignResponse login(SignRequest request) throws Exception {
-
     String modifiedEmail = request.getEmail() + "@yiu.ac.kr";
+    if(request.getEmail() == null || request.getPwd() == null)
+      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+
     User user = userRepository.findByEmail(modifiedEmail).orElseThrow(() ->
-        new BadCredentialsException("잘못된 계정정보입니다."));
+        new CustomException(ErrorCode.MEMBER_NOT_EXIST));
 
     if (!passwordEncoder.matches(request.getPwd(), user.getPwd())) {
-      throw new BadCredentialsException("잘못된 계정정보입니다.");
+      throw new CustomException(ErrorCode.VALID_NOT_PWD);
     }
 
     user.setRefreshToken(createRefreshToken(user));
