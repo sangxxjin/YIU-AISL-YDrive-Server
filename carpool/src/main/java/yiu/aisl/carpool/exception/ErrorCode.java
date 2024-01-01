@@ -11,7 +11,7 @@ public enum ErrorCode {
 
     VALID_NOT_STUDENT_ID(401, ResultMessage.VALID_NOT_STUDENT_ID),
     VALID_NOT_PWD(401, ResultMessage.VALID_NOT_PWD),
-    MEMBER_NOT_EXIST(401, ResultMessage.MEMBER_NOT_EXIST),
+    MEMBER_NOT_EXIST(402, ResultMessage.MEMBER_NOT_EXIST),
 
     // 데이터를 찾을 수 없음
     NOT_EXIST(404, ResultMessage.NOT_EXIST),
