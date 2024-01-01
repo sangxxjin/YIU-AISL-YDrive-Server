@@ -106,6 +106,9 @@ public class UserService {
   }
 
   public boolean changePwd(PwdRequest request) throws Exception {
+    if(request.getPwd().isEmpty())
+      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+
     try {
       String authHeader = httpServletRequest.getHeader("Authorization");
       if (authHeader != null && authHeader.startsWith("Bearer ")) {

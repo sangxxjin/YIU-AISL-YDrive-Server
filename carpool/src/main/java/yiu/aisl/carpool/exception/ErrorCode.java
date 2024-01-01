@@ -11,7 +11,10 @@ public enum ErrorCode {
 
     VALID_NOT_STUDENT_ID(401, ResultMessage.VALID_NOT_STUDENT_ID),
     VALID_NOT_PWD(401, ResultMessage.VALID_NOT_PWD),
+
+    // 존재하지 않은 값
     MEMBER_NOT_EXIST(402, ResultMessage.MEMBER_NOT_EXIST),
+    ERROR_CODE(402, ResultMessage.ERROR_CODE),
 
     // 데이터를 찾을 수 없음
     NOT_EXIST(404, ResultMessage.NOT_EXIST),
@@ -47,6 +50,7 @@ public enum ErrorCode {
         String INSUFFICIENT_DATA = "데이터 부족";
         String MEMBER_NOT_EXIST = "존재하지 않는 사용자";
         String NOT_EXIST = "존재하지 않음";
+        String ERROR_CODE = "인증코드 불일치";
         String CONFLICT = "데이터 충돌";
         String DUPLICATE = "데이터 중복";
         String INTERNAL_SERVER_ERROR = "내부 서버 오류";
