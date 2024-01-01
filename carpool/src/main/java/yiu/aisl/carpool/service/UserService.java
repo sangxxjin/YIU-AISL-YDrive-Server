@@ -43,9 +43,11 @@ public class UserService {
 
 
   public SignResponse login(SignRequest request) throws Exception {
-    String modifiedEmail = request.getEmail() + "@yiu.ac.kr";
-    if(request.getEmail() == null || request.getPwd() == null)
+    if(request.getEmail().isEmpty() || request.getPwd().isEmpty())
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+
+    String modifiedEmail = request.getEmail() + "@yiu.ac.kr";
+
 
     User user = userRepository.findByEmail(modifiedEmail).orElseThrow(() ->
         new CustomException(ErrorCode.MEMBER_NOT_EXIST));
