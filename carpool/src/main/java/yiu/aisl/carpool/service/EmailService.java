@@ -89,6 +89,6 @@ public class EmailService {
         }
         if(correct == true) {
             return ResponseEntity.ok("코드 인증 성공").hasBody();
-        } else throw new CustomException(ErrorCode.ERROR_CODE);
+        } else throw new CustomException(ErrorCode.INVALID_EMAIL_VERIFICATION_CODE);
     }
 }
