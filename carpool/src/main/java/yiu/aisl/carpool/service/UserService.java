@@ -123,22 +123,19 @@ public class UserService {
   }
 
   public void delete(CustomUserDetails userDetails, SignRequest request) {
-    String email = userDetails.getUser().getEmail();
+    // 사용자 정보가 이미 토큰에서 인증되었으므로 다시 데이터베이스에서 찾아올 필요 없음
+    User user = userDetails.getUser();
 
-    Optional<User> userOptional = userRepository.findByEmail(email);
+    if (request.getPwd() == null) {
+      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+    }
 
-    if (userOptional.isPresent()) {
-      User user = userOptional.get();
-      String enteredPassword = request.getPwd();
+    String enteredPassword = request.getPwd();
 
-      // 사용자의 비밀번호를 가져와서 입력된 비밀번호와 비교
-      if (passwordEncoder.matches(enteredPassword, user.getPwd())) {
-        userRepository.delete(user);
-      } else {
-        throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-      }
+    if (passwordEncoder.matches(enteredPassword, user.getPwd())) {
+      userRepository.delete(user);
     } else {
-      throw new IllegalArgumentException("찾을수가 없습니다.");
+      throw new CustomException(ErrorCode.VALID_NOT_PWD);
     }
   }
 
