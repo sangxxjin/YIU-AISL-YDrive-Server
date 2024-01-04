@@ -84,7 +84,7 @@ public class EmailService {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         boolean correct = false;
-        if(Objects.equals(authNum, userAuthNum) == true) {
+        if(Objects.equals(authNum, userAuthNum)) {
             correct = true;
         }
         if(correct == true) {
