@@ -48,7 +48,7 @@ public class UserService {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
     User user = userRepository.findByEmail(modifiedEmail).orElseThrow(() ->
-        new CustomException(ErrorCode.MEMBER_NOT_EXIST));
+        new CustomException(ErrorCode.NOT_EXIST));
 
     if (!passwordEncoder.matches(request.getPwd(), user.getPwd())) {
       throw new CustomException(ErrorCode.VALID_NOT_PWD);
