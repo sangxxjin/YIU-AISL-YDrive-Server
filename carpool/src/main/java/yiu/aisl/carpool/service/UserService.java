@@ -220,7 +220,7 @@ public class UserService {
     // 사용자 정보가 이미 토큰에서 인증되었으므로 다시 데이터베이스에서 찾아올 필요 없음
     User user = userDetails.getUser();
 
-    if (myprofileDto.getName() == null || myprofileDto.getPhone() == null || myprofileDto.getHome() == null) {
+    if (myprofileDto.getName().isEmpty() || myprofileDto.getPhone().isEmpty() || myprofileDto.getHome().isEmpty()) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
     }
 
