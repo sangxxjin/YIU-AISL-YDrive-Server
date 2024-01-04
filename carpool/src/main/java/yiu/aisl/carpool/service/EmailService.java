@@ -2,12 +2,17 @@ package yiu.aisl.carpool.service;
 
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import yiu.aisl.carpool.exception.CustomException;
+import yiu.aisl.carpool.exception.ErrorCode;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
@@ -75,6 +80,15 @@ public class EmailService {
 
     // 이메일 검증
     public boolean emailTrue(String userAuthNum){
-        return Objects.equals(authNum, userAuthNum);
+        if(userAuthNum.isEmpty()) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+        }
+        boolean correct = false;
+        if(Objects.equals(authNum, userAuthNum) == true) {
+            correct = true;
+        }
+        if(correct == true) {
+            return ResponseEntity.ok("코드 인증 성공").hasBody();
+        } else throw new CustomException(ErrorCode.ERROR_CODE);
     }
 }

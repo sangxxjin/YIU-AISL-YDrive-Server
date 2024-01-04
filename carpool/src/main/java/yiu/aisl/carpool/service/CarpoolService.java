@@ -16,6 +16,8 @@ import yiu.aisl.carpool.Dto.WaitRequest;
 import yiu.aisl.carpool.domain.Carpool;
 import yiu.aisl.carpool.domain.User;
 import yiu.aisl.carpool.domain.Wait;
+import yiu.aisl.carpool.exception.CustomException;
+import yiu.aisl.carpool.exception.ErrorCode;
 import yiu.aisl.carpool.repository.CarpoolRepository;
 import yiu.aisl.carpool.repository.UserRepository;
 import yiu.aisl.carpool.repository.WaitRepository;
@@ -34,6 +36,11 @@ public class CarpoolService {
   private final WaitRepository waitRepository;
 
   public boolean create(CarpoolRequest request) throws Exception {
+    if (request.getMemberNum() == 0) {
+      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+    } else if (request.getStart().isEmpty() || request.getEnd().isEmpty() || (request.getDate() == null)) {
+      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+    }
     try {
       LocalDateTime createdAt = LocalDateTime.now();
       String authHeader = httpServletRequest.getHeader("Authorization");

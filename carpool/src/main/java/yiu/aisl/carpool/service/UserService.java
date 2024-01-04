@@ -43,9 +43,11 @@ public class UserService {
 
 
   public SignResponse login(SignRequest request) throws Exception {
-    String modifiedEmail = request.getEmail() + "@yiu.ac.kr";
-    if(request.getEmail() == null || request.getPwd() == null)
+    if(request.getEmail().isEmpty() || request.getPwd().isEmpty())
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+
+    String modifiedEmail = request.getEmail() + "@yiu.ac.kr";
+
 
     User user = userRepository.findByEmail(modifiedEmail).orElseThrow(() ->
         new CustomException(ErrorCode.NOT_EXIST));
@@ -104,6 +106,9 @@ public class UserService {
   }
 
   public boolean changePwd(PwdRequest request) throws Exception {
+    if(request.getPwd().isEmpty())
+      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+
     try {
       String authHeader = httpServletRequest.getHeader("Authorization");
       if (authHeader != null && authHeader.startsWith("Bearer ")) {
