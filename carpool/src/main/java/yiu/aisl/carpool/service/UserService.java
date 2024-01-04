@@ -212,23 +212,24 @@ public class UserService {
   }
 
   public String profileUpdate(CustomUserDetails userDetails, MyprofileDto myprofileDto) {
-    Optional<User> userOptional = userRepository.findByEmail(userDetails.getUser().getEmail());
-    if (userOptional.isPresent()) {
-      User user = userOptional.get();
+    // 사용자 정보가 이미 토큰에서 인증되었으므로 다시 데이터베이스에서 찾아올 필요 없음
+    User user = userDetails.getUser();
 
-      user.setName(myprofileDto.getName());
-      user.setPhone(myprofileDto.getPhone());
-      user.setHome(myprofileDto.getHome());
-      user.setCarNum(myprofileDto.getCarNum());
-      if (myprofileDto.getCarNum() != null) {
-        user.setStatus(1);
-      }
-      userRepository.save(user);
-      return "success";
-
-    } else {
-      throw new IllegalArgumentException("User not found");
+    if (myprofileDto.getName() == null || myprofileDto.getPhone() == null || myprofileDto.getHome() == null) {
+      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
     }
+
+    user.setName(myprofileDto.getName());
+    user.setPhone(myprofileDto.getPhone());
+    user.setHome(myprofileDto.getHome());
+    user.setCarNum(myprofileDto.getCarNum());
+
+    if (myprofileDto.getCarNum() != null) {
+      user.setStatus(1);
+    }
+
+    userRepository.save(user);
+    return "success";
   }
 
   public void ownerMode(CustomUserDetails customUserDetails) {
