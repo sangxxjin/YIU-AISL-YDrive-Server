@@ -147,6 +147,10 @@ public class CarpoolService {
       Carpool carpool = carpoolOptional.get();
       // 자신의 게시물이 맞으면 해당 게시물에 대한 모든 wait 엔티티 가져오기
       List<Wait> waits = waitRepository.findByCarpoolNum(carpool);
+      if(carpool.getCheckNum() == 1) {
+        carpool.setCheckNum(3);
+        carpoolRepository.save(carpool);
+      }
       for (Wait wait : waits) {
         // 자신의 checkNum이 1인 경우에 checkNum을 3으로 변경
         if (wait.getCheckNum() == 1) {
