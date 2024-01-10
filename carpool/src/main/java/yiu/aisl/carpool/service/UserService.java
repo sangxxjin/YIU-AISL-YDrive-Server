@@ -73,7 +73,7 @@ public class UserService {
 
   public boolean join(SignRequest request) throws Exception {
     // 데이터 없음
-    if(request.getEmail() == null || request.getPwd() == null || request.getDistrict() == null)
+    if(request.getEmail().isEmpty() || request.getPwd().isEmpty() || request.getDistrict().isEmpty() || request.getCity().isEmpty() || request.getName().isEmpty())
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
     // 이미 존재하는 학번
