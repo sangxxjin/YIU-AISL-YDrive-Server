@@ -25,9 +25,15 @@ public enum ErrorCode {
     // 데이터 중복
     DUPLICATE(409, ResultMessage.DUPLICATE),
 
+    Number_Of_Applications_Exceeded(402, ResultMessage.Number_Of_Applications_Exceeded),
+    Already_Applied(403, ResultMessage.Already_Applied),
+    Post_Written_By_Me(405, ResultMessage.Post_Written_By_Me),
+
     // 서버 오류
     INTERNAL_SERVER_ERROR(500, ResultMessage.INTERNAL_SERVER_ERROR)
     ;
+
+
 
     private final int status;
     private final String message;
@@ -46,6 +52,9 @@ public enum ErrorCode {
     }
 
     public interface ResultMessage {
+        String Number_Of_Applications_Exceeded = "신청 인원이 초과됨";
+        String Already_Applied = "이미 신청함";
+        String Post_Written_By_Me = "본인이 작성한 게시물임";
         String VALID_NOT_STUDENT_ID = "가입하지 않은 학번";
         String VALID_NOT_PWD = "잘못된 비밀번호";
         String INVALID_EMAIL_VERIFICATION_CODE = "이메일 인증 코드가 올바르지 않음";

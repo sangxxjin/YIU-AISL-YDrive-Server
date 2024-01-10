@@ -107,13 +107,13 @@ public class CarpoolService {
                     .build();
                 waitRepository.save(wait);
               } else {
-                throw new IllegalArgumentException("신청 인원 초과!!!!!");
+                throw new CustomException(ErrorCode.Number_Of_Applications_Exceeded);
               }
             } else {
-              throw new IllegalArgumentException("본인이 작성한 게시글에는 신청할 수 없음!!!!!");
+              throw new CustomException(ErrorCode.Post_Written_By_Me);
             }
           } else {
-            throw new IllegalArgumentException("이미 해당 게시물에 대해 신청한 기록이 있습니다.");
+            throw new CustomException(ErrorCode.Already_Applied);
           }
         }
       }
@@ -136,7 +136,7 @@ public class CarpoolService {
         carpool.setMemberNum(carpool.getMemberNum() - 1);
       waitRepository.save(wait);
       carpoolRepository.save(carpool);
-    }else {
+    } else {
       throw new IllegalArgumentException("찾을수가 없습니다.");
     }
   }
@@ -166,6 +166,12 @@ public class CarpoolService {
 
   public void update(CustomUserDetails userDetails, Integer carpoolNum, CarpoolDto carpoolDto) {
     String email = userDetails.getUser().getEmail();
+    if(carpoolDto.getMemberNum() == 0) {
+      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+    }
+    if(carpoolDto.getStart().isEmpty() || carpoolDto.getEnd().isEmpty() || carpoolDto.getDate() == null) {
+      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+    }
     Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum,
         email);
     if (carpoolOptional.isPresent()) {
