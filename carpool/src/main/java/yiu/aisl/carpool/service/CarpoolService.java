@@ -138,7 +138,9 @@ public class CarpoolService {
       if (waitDto.getCheckNum()==1)
         // 게시물의 신청 인원 수 - 1
         carpool.setMemberNum(carpool.getMemberNum() - 1);
-        carpool.setCheckNum(1);
+        if(carpool.getMemberNum() == 0) {
+          carpool.setCheckNum(2);
+        } else carpool.setCheckNum(1);
       waitRepository.save(wait);
       carpoolRepository.save(carpool);
     } else {
