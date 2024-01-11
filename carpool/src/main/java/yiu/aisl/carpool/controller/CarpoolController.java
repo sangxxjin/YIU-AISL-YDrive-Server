@@ -63,6 +63,14 @@ public class CarpoolController {
     return ResponseEntity.ok("결정 성공");
   }
 
+  @PutMapping("/deny/{carpoolNum}/{waitNum}")
+  public ResponseEntity<Object> waitDeny(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                           @PathVariable Integer carpoolNum, @PathVariable Integer waitNum,
+                                           @RequestBody WaitDto waitDto) {
+    carpoolService.deny(userDetails, carpoolNum, waitNum, waitDto);
+    return ResponseEntity.ok("거절 성공");
+  }
+
   @DeleteMapping("/delete/{carpoolNum}")
   public ResponseEntity<Object> carpoolDelete(
           @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Integer carpoolNum) {
