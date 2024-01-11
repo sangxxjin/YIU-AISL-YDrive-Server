@@ -91,6 +91,13 @@ public class CarpoolController {
     return ResponseEntity.ok("도착");
   }
 
+  @PostMapping("/{carpoolNum}/acceptFinish")
+  public ResponseEntity<String> carpoolAcceptFinish(
+          @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Integer carpoolNum) {
+    carpoolService.carpoolAcceptFinish(userDetails, carpoolNum);
+    return ResponseEntity.ok("모집 완료");
+  }
+
   @GetMapping("/{carpoolNum}/apply-list")
   public List<Wait> getWaitList(@PathVariable Integer carpoolNum,@AuthenticationPrincipal CustomUserDetails userDetails) {
     return screenService.getWaitList(carpoolNum, userDetails);

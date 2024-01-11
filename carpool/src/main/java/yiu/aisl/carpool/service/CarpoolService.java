@@ -134,6 +134,7 @@ public class CarpoolService {
       if (waitDto.getCheckNum()==1)
         // 게시물의 신청 인원 수 - 1
         carpool.setMemberNum(carpool.getMemberNum() - 1);
+        carpool.setCheckNum(1);
       waitRepository.save(wait);
       carpoolRepository.save(carpool);
     } else {
@@ -160,7 +161,7 @@ public class CarpoolService {
       Carpool carpool = carpoolOptional.get();
       // 자신의 게시물이 맞으면 해당 게시물에 대한 모든 wait 엔티티 가져오기
       List<Wait> waits = waitRepository.findByCarpoolNum(carpool);
-      if(carpool.getCheckNum() == 1) {
+      if(carpool.getCheckNum() == 2) {
         carpool.setCheckNum(3);
         carpoolRepository.save(carpool);
       }
@@ -176,6 +177,21 @@ public class CarpoolService {
     }
   }
 
+  public void carpoolAcceptFinish(CustomUserDetails userDetails, Integer carpoolNum) {
+    String email = userDetails.getUser().getEmail();
+    Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email);
+    if (carpoolOptional.isPresent()) {
+      Carpool carpool = carpoolOptional.get();
+      // 자신의 게시물이 맞으면 해당 게시물에 대한 모든 wait 엔티티 가져오기
+      List<Wait> waits = waitRepository.findByCarpoolNum(carpool);
+      if(carpool.getCheckNum() == 1) {
+        carpool.setCheckNum(2);
+        carpoolRepository.save(carpool);
+      }
+    } else {
+      throw new IllegalArgumentException("찾을 수 없거나 권한이 없습니다.");
+    }
+  }
 
   public void update(CustomUserDetails userDetails, Integer carpoolNum, CarpoolDto carpoolDto) {
     String email = userDetails.getUser().getEmail();
