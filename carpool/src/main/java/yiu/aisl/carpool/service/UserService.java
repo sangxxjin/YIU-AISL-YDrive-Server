@@ -243,7 +243,7 @@ public class UserService {
     if (userOptional.isPresent()) {
       User user = userOptional.get();
       if (user.getCarNum() == null) {
-        throw new IllegalArgumentException("자동차가 없어 차주 모드로 변경이 불가능합니다.");
+        throw new CustomException(ErrorCode.NOT_EXIST);
       }
       user.setStatus(1);
       userRepository.save(user);

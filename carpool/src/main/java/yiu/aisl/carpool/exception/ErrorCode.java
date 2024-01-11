@@ -12,6 +12,7 @@ public enum ErrorCode {
     VALID_NOT_STUDENT_ID(401, ResultMessage.VALID_NOT_STUDENT_ID),
     VALID_NOT_PWD(401, ResultMessage.VALID_NOT_PWD),
     INVALID_EMAIL_VERIFICATION_CODE(401, ResultMessage.INVALID_EMAIL_VERIFICATION_CODE),
+    Application_Deadline(401, ResultMessage.Application_Deadline),
 
     // 존재하지 않은 값
     MEMBER_NOT_EXIST(402, ResultMessage.MEMBER_NOT_EXIST),
@@ -27,6 +28,7 @@ public enum ErrorCode {
 
     Number_Of_Applications_Exceeded(402, ResultMessage.Number_Of_Applications_Exceeded),
     Already_Applied(403, ResultMessage.Already_Applied),
+
     Already_Accept(403, ResultMessage.Already_Accept),
     Post_Written_By_Me(405, ResultMessage.Post_Written_By_Me),
 
@@ -54,6 +56,7 @@ public enum ErrorCode {
 
     public interface ResultMessage {
         String Number_Of_Applications_Exceeded = "신청 인원이 초과됨";
+        String Application_Deadline = "신청 마감";
         String Already_Applied = "이미 신청함";
         String Already_Accept = "이미 수락함";
         String Post_Written_By_Me = "본인이 작성한 게시물임";

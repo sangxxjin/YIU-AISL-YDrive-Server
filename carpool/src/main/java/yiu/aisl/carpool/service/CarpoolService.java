@@ -89,6 +89,9 @@ public class CarpoolService {
         if(carpoolOptional.isPresent()) {
           Carpool carpool = carpoolOptional.get();
           String ownerEmail = carpool.getEmail();  // 게시물을 작성한 사용자의 이메일
+          if(carpool.getCheckNum() == 3) {
+            throw new CustomException(ErrorCode.Application_Deadline); // 신청이 마감된 경우
+          }
 
           // 사용자가 이미 해당 carpoolNum에 대해 신청한 기록이 있는지 확인
           boolean alreadyApplied = waitRepository.existsByCarpoolNumAndGuest(carpool, email);
