@@ -27,6 +27,7 @@ public enum ErrorCode {
 
     Number_Of_Applications_Exceeded(402, ResultMessage.Number_Of_Applications_Exceeded),
     Already_Applied(403, ResultMessage.Already_Applied),
+    Already_Accept(403, ResultMessage.Already_Accept),
     Post_Written_By_Me(405, ResultMessage.Post_Written_By_Me),
 
     // 서버 오류
@@ -54,6 +55,7 @@ public enum ErrorCode {
     public interface ResultMessage {
         String Number_Of_Applications_Exceeded = "신청 인원이 초과됨";
         String Already_Applied = "이미 신청함";
+        String Already_Accept = "이미 수락함";
         String Post_Written_By_Me = "본인이 작성한 게시물임";
         String VALID_NOT_STUDENT_ID = "가입하지 않은 학번";
         String VALID_NOT_PWD = "잘못된 비밀번호";

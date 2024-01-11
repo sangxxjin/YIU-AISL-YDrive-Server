@@ -128,8 +128,12 @@ public class CarpoolService {
     Optional<Wait> waitOptional = waitRepository.findByOwnerAndCarpoolNum_CarpoolNumAndWaitNum(email,carpoolNum,waitNum);
     Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNum(carpoolNum);
     Carpool carpool = carpoolOptional.get();
+    if(carpool.getMemberNum() == 0) throw new CustomException(ErrorCode.Number_Of_Applications_Exceeded);
     if (waitOptional.isPresent()){
       Wait wait = waitOptional.get();
+      if(wait.getCheckNum() == 1) {
+        throw new CustomException(ErrorCode.Already_Accept);
+      }
       wait.setCheckNum(waitDto.getCheckNum());
       if (waitDto.getCheckNum()==1)
         // 게시물의 신청 인원 수 - 1
