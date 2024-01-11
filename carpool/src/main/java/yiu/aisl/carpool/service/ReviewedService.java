@@ -17,6 +17,8 @@ import yiu.aisl.carpool.Dto.OwnerReviewedResponse;
 import yiu.aisl.carpool.domain.GuestReviewed;
 import yiu.aisl.carpool.domain.OwnerReviewed;
 import yiu.aisl.carpool.domain.Wait;
+import yiu.aisl.carpool.exception.CustomException;
+import yiu.aisl.carpool.exception.ErrorCode;
 import yiu.aisl.carpool.repository.CarpoolRepository;
 import yiu.aisl.carpool.repository.GuestReviewdRepository;
 import yiu.aisl.carpool.repository.OwnerReviewdRepository;
@@ -37,6 +39,9 @@ public class ReviewedService {
   private final WaitRepository waitRepository;
 
   public boolean ownerReviewed(int carpoolNum, int waitNum, OwnerReviewedRequest request) throws Exception {
+    if(request.getReview().isEmpty() || request.getStar() == 0) {
+      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+    }
     try {
       LocalDateTime createdAt = LocalDateTime.now();
       String authHeader = httpServletRequest.getHeader("Authorization");
@@ -83,6 +88,9 @@ public class ReviewedService {
 
 
   public boolean guestReviewed(int carpoolNum, int waitNum, GuestReviewedRequest request) throws Exception {
+    if(request.getReview().isEmpty() || request.getStar() == 0) {
+      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+    }
     try {
       LocalDateTime createdAt = LocalDateTime.now();
       String authHeader = httpServletRequest.getHeader("Authorization");
