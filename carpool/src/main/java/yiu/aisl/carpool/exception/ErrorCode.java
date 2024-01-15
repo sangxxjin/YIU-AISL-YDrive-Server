@@ -10,10 +10,11 @@ public enum ErrorCode {
     INSUFFICIENT_DATA(400, ResultMessage.INSUFFICIENT_DATA),
 
     VALID_NOT_STUDENT_ID(401, ResultMessage.VALID_NOT_STUDENT_ID),
+    INVALID_MEMBER_NUM(401, ResultMessage.INVALID_MEMBER_NUM),
     VALID_NOT_PWD(401, ResultMessage.VALID_NOT_PWD),
     VALID_EMAIL_LENGTH(401, ResultMessage.VALID_EMAIL_LENGTH),
     INVALID_EMAIL_VERIFICATION_CODE(401, ResultMessage.INVALID_EMAIL_VERIFICATION_CODE),
-    Application_Deadline(401, ResultMessage.Application_Deadline),
+    APPLICATION_DEADLINE(401, ResultMessage.APPLICATION_DEADLINE),
 
     // 존재하지 않은 값
     MEMBER_NOT_EXIST(402, ResultMessage.MEMBER_NOT_EXIST),
@@ -28,11 +29,14 @@ public enum ErrorCode {
     // 데이터 중복
     DUPLICATE(409, ResultMessage.DUPLICATE),
 
-    Number_Of_Applications_Exceeded(402, ResultMessage.Number_Of_Applications_Exceeded),
-    Already_Applied(403, ResultMessage.Already_Applied),
+    NUMBER_OF_APPLICATIONS_EXCEEDED(402, ResultMessage.NUMBER_OF_APPLICATIONS_EXCEEDED),
+    ALREADY_APPLIED(403, ResultMessage.ALREADY_APPLIED),
+    CANNOT_DELETE_CARPOOL_HOUR(403, ResultMessage.CANNOT_DELETE_CARPOOL_HOUR),
+    CHANGE_TO_DRIVER_MODE_REQUIRED(403, ResultMessage.CHANGE_TO_DRIVER_MODE_REQUIRED),
+    CANNOT_DELETE_CARPOOL_WITH_WAITING(403, ResultMessage.CANNOT_DELETE_CARPOOL_WITH_WAITING),
 
-    Already_Accept(403, ResultMessage.Already_Accept),
-    Post_Written_By_Me(405, ResultMessage.Post_Written_By_Me),
+    ALREADY_ACCEPT(403, ResultMessage.ALREADY_ACCEPT),
+    POST_WRITTEN_BY_ME(405, ResultMessage.POST_WRITTEN_BY_ME),
 
     // 서버 오류
     INTERNAL_SERVER_ERROR(500, ResultMessage.INTERNAL_SERVER_ERROR)
@@ -57,12 +61,16 @@ public enum ErrorCode {
     }
 
     public interface ResultMessage {
+        String CANNOT_DELETE_CARPOOL_WITH_WAITING = "대기중이거나 수락한 게스트가 있어서 삭제할 수 없습니다.";
+        String CANNOT_DELETE_CARPOOL_HOUR = "출발 12시간 전에는 삭제할 수 없습니다.";
+        String CHANGE_TO_DRIVER_MODE_REQUIRED = "차주 모드로 변경해야 게시글 작성이 가능합니다.";
+        String INVALID_MEMBER_NUM = "신청할 수 있는 인원은 1명 이상이어야 합니다.";
         String VALID_EMAIL_LENGTH = "올바르지 않은 이메일 길이";
-        String Number_Of_Applications_Exceeded = "신청 인원이 초과됨";
-        String Application_Deadline = "신청 마감";
-        String Already_Applied = "이미 신청함";
-        String Already_Accept = "이미 수락함";
-        String Post_Written_By_Me = "본인이 작성한 게시물임";
+        String NUMBER_OF_APPLICATIONS_EXCEEDED = "신청 인원이 초과됨";
+        String APPLICATION_DEADLINE = "신청 마감";
+        String ALREADY_APPLIED = "이미 신청함";
+        String ALREADY_ACCEPT = "이미 수락함";
+        String POST_WRITTEN_BY_ME = "본인이 작성한 게시물임";
         String VALID_NOT_STUDENT_ID = "가입하지 않은 학번";
         String VALID_NOT_PWD = "잘못된 비밀번호";
         String INVALID_EMAIL_VERIFICATION_CODE = "이메일 인증 코드가 올바르지 않음";

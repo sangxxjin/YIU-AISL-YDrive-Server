@@ -20,4 +20,8 @@ public interface WaitRepository extends JpaRepository<Wait, String> {
   List<Wait> findByCheckNumAndGuestWithCarpool(@Param("email") String email);
 
   List<Wait> findByCarpoolNum(Carpool carpool);
+
+  List<Wait> findByCarpoolNumAndCheckNum(Carpool carpool, int i);
+
+  void deleteAllByCarpoolNum(Carpool carpool);
 }
