@@ -25,6 +25,7 @@ import yiu.aisl.carpool.security.CustomUserDetails;
 @Transactional
 @RequiredArgsConstructor
 public class CarpoolService {
+
   private final CarpoolRepository carpoolRepository;
   private final WaitRepository waitRepository;
 
@@ -155,15 +156,16 @@ public class CarpoolService {
 
   public void carpoolFinish(CustomUserDetails userDetails, Integer carpoolNum) {
     String email = userDetails.getUser().getEmail();
-    Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email);
-    if (carpoolOptional.isPresent()) {
-      Carpool carpool = carpoolOptional.get();
-      // 자신의 게시물이 맞으면 해당 게시물에 대한 모든 wait 엔티티 가져오기
+
+    Carpool carpool = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email)
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
+
+    if (carpool.getCheckNum() == 2) {
+      carpool.setCheckNum(3);
+      carpoolRepository.save(carpool);
+
+      // 해당 carpool에 대한 모든 wait 엔티티 가져오기
       List<Wait> waits = waitRepository.findByCarpoolNum(carpool);
-      if(carpool.getCheckNum() == 2) {
-        carpool.setCheckNum(3);
-        carpoolRepository.save(carpool);
-      }
       for (Wait wait : waits) {
         // 자신의 checkNum이 1인 경우에 checkNum을 3으로 변경
         if (wait.getCheckNum() == 1) {
@@ -172,9 +174,10 @@ public class CarpoolService {
         }
       }
     } else {
-      throw new IllegalArgumentException("찾을 수 없거나 권한이 없습니다.");
+      throw new CustomException(ErrorCode.NOT_EXIST);
     }
   }
+
 
   public void carpoolAcceptFinish(CustomUserDetails userDetails, Integer carpoolNum) {
     String email = userDetails.getUser().getEmail();
