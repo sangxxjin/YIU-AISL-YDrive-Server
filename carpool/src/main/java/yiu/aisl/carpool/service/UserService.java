@@ -43,11 +43,11 @@ public class UserService {
 
 
   public SignResponse login(SignRequest request) throws Exception {
-    if(request.getEmail().isEmpty() || request.getPwd().isEmpty())
+    if (request.getEmail().isEmpty() || request.getPwd().isEmpty()) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+    }
 
     String modifiedEmail = request.getEmail() + "@yiu.ac.kr";
-
 
     User user = userRepository.findByEmail(modifiedEmail).orElseThrow(() ->
         new CustomException(ErrorCode.NOT_EXIST));
@@ -73,12 +73,15 @@ public class UserService {
 
   public boolean join(SignRequest request) throws Exception {
     // 데이터 없음
-    if(request.getEmail().isEmpty() || request.getPwd().isEmpty() || request.getDistrict().isEmpty() || request.getCity().isEmpty() || request.getName().isEmpty())
+    if (request.getEmail().isEmpty() || request.getPwd().isEmpty() || request.getDistrict()
+        .isEmpty() || request.getCity().isEmpty() || request.getName().isEmpty()) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+    }
 
     // 이미 존재하는 학번
-    if(userRepository.findByEmail(request.getEmail()+"@yiu.ac.kr").isPresent())
+    if (userRepository.findByEmail(request.getEmail() + "@yiu.ac.kr").isPresent()) {
       throw new CustomException(ErrorCode.DUPLICATE);
+    }
 
     try {
 
@@ -106,8 +109,9 @@ public class UserService {
   }
 
   public boolean changePwd(PwdRequest request) throws Exception {
-    if(request.getPwd().isEmpty())
+    if (request.getPwd().isEmpty()) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+    }
 
     try {
       String authHeader = httpServletRequest.getHeader("Authorization");
@@ -209,7 +213,8 @@ public class UserService {
         .carNum(user.get().getCarNum())
         .build();
   }
-  public Object getUserStatus(CustomUserDetails userDetails){
+
+  public Object getUserStatus(CustomUserDetails userDetails) {
     Optional<User> user = userRepository.findByEmail(userDetails.getUser().getEmail());
     return UserStateDto.builder()
         .state(user.get().getStatus())
@@ -220,7 +225,8 @@ public class UserService {
     // 사용자 정보가 이미 토큰에서 인증되었으므로 다시 데이터베이스에서 찾아올 필요 없음
     User user = userDetails.getUser();
 
-    if (myprofileDto.getName().isEmpty() || myprofileDto.getPhone().isEmpty() || myprofileDto.getHome().isEmpty()) {
+    if (myprofileDto.getName().isEmpty() || myprofileDto.getPhone().isEmpty()
+        || myprofileDto.getHome().isEmpty()) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
     }
 
@@ -264,19 +270,21 @@ public class UserService {
     }
   }
 
-  public List<GuestUseInfoResponse> getGuestList(@AuthenticationPrincipal CustomUserDetails userDetails) {
+  public List<GuestUseInfoResponse> getGuestList(
+      @AuthenticationPrincipal CustomUserDetails userDetails) {
     String email = userDetails.getUsername();
     List<Wait> waits = waitRepository.findByCheckNumAndGuestWithCarpool(email);
     return waits.stream()
-            .map(GuestUseInfoResponse::new)
-            .collect(Collectors.toList());
+        .map(GuestUseInfoResponse::new)
+        .collect(Collectors.toList());
   }
 
-  public List<OwnerUseInfoResponse> getOwnerList(@AuthenticationPrincipal CustomUserDetails userDetails) {
+  public List<OwnerUseInfoResponse> getOwnerList(
+      @AuthenticationPrincipal CustomUserDetails userDetails) {
     String email = userDetails.getUsername();
     List<Carpool> carpools = carpoolRepository.findByCheckNumAndOwnerWithCarpool(email);
     return carpools.stream()
-            .map(OwnerUseInfoResponse::new)
-            .collect(Collectors.toList());
+        .map(OwnerUseInfoResponse::new)
+        .collect(Collectors.toList());
   }
 }
