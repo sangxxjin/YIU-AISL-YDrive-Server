@@ -129,9 +129,7 @@ public class UserService {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
     }
 
-    String enteredPassword = request.getPwd();
-
-    if (passwordEncoder.matches(enteredPassword, user.getPwd())) {
+    if (passwordEncoder.matches(request.getPwd(), user.getPwd())) {
       userRepository.delete(user);
     } else {
       throw new CustomException(ErrorCode.VALID_NOT_PWD);
