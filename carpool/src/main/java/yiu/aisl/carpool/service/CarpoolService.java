@@ -193,26 +193,45 @@ public class CarpoolService {
 
   public void update(CustomUserDetails userDetails, Integer carpoolNum, CarpoolDto carpoolDto) {
     String email = userDetails.getUser().getEmail();
-    if(carpoolDto.getMemberNum() == 0) {
+
+    // 데이터가 충분하지 않은 경우
+    if (carpoolDto.getMemberNum() == 0 || carpoolDto.getStart().isEmpty() || carpoolDto.getEnd()
+        .isEmpty() || carpoolDto.getDate() == null) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
     }
-    if(carpoolDto.getStart().isEmpty() || carpoolDto.getEnd().isEmpty() || carpoolDto.getDate() == null) {
-      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+
+    // 카풀 정보 조회
+    Carpool carpool = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email)
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
+
+    // 현재 시간
+    LocalDateTime now = LocalDateTime.now();
+
+    // 차이 계산
+    long hoursDifference = ChronoUnit.HOURS.between(now, carpool.getDate());
+
+    // 차이가 12시간 미만이면 예외 발생
+    if (Math.abs(hoursDifference) < 12) {
+      throw new CustomException(ErrorCode.CANNOT_DELETE_CARPOOL_HOUR);
     }
-    Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum,
-        email);
-    if (carpoolOptional.isPresent()) {
-      Carpool carpool = carpoolOptional.get();
-      // 업데이트 로직을 수행하고 저장
-      carpool.setStart(carpoolDto.getStart());
-      carpool.setEnd(carpoolDto.getEnd());
-      carpool.setDate(carpoolDto.getDate());
-      carpool.setMemberNum(carpoolDto.getMemberNum());
-      carpoolRepository.save(carpool);
-    } else {
-      throw new IllegalArgumentException("찾을수가 없습니다.");
+
+    // Wait 엔터티 검사
+    List<Wait> waitingList = waitRepository.findByCarpoolNumAndCheckNum(carpool, 0);
+    List<Wait> acceptedList = waitRepository.findByCarpoolNumAndCheckNum(carpool, 1);
+
+    // 대기중이거나 수락한 사람이 있으면 삭제불가
+    if (!waitingList.isEmpty() || !acceptedList.isEmpty()) {
+      throw new CustomException(ErrorCode.CANNOT_DELETE_CARPOOL_WITH_WAITING);
     }
+
+    // 카풀 정보 업데이트
+    carpool.setStart(carpoolDto.getStart());
+    carpool.setEnd(carpoolDto.getEnd());
+    carpool.setDate(carpoolDto.getDate());
+    carpool.setMemberNum(carpoolDto.getMemberNum());
+    carpoolRepository.save(carpool);
   }
+
 
   public void delete(CustomUserDetails userDetails, Integer carpoolNum) {
     String email = userDetails.getUser().getEmail();
