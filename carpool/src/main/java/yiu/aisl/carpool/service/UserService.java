@@ -235,19 +235,14 @@ public class UserService {
   }
 
   public void ownerMode(CustomUserDetails customUserDetails) {
-    Optional<User> userOptional = userRepository.findByEmail(
-        customUserDetails.getUser().getEmail());
-    if (userOptional.isPresent()) {
-      User user = userOptional.get();
-      if (user.getCarNum() == null) {
-        throw new CustomException(ErrorCode.NOT_EXIST);
-      }
-      user.setStatus(1);
-      userRepository.save(user);
-    } else {
-      throw new IllegalArgumentException("User not found");
+    User user = customUserDetails.getUser();
+    if (user.getCarNum() == null) {
+      throw new CustomException(ErrorCode.CAR_NOT_EXIST);
     }
+    user.setStatus(1);
+    userRepository.save(user);
   }
+
 
   public void guestMode(CustomUserDetails customUserDetails) {
     Optional<User> userOptional = userRepository.findByEmail(

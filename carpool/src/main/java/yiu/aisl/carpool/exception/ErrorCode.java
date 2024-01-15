@@ -20,6 +20,7 @@ public enum ErrorCode {
 
     // 데이터를 찾을 수 없음
     NOT_EXIST(404, ResultMessage.NOT_EXIST),
+    CAR_NOT_EXIST(404, ResultMessage.CAR_NOT_EXIST),
 
     // 데이터 충돌
     CONFLICT(409, ResultMessage.CONFLICT),
@@ -65,6 +66,7 @@ public enum ErrorCode {
         String INVALID_EMAIL_VERIFICATION_CODE = "이메일 인증 코드가 올바르지 않음";
         String INSUFFICIENT_DATA = "데이터 부족";
         String MEMBER_NOT_EXIST = "존재하지 않는 사용자";
+        String CAR_NOT_EXIST = "차량을 보유하지 않음";
         String NOT_EXIST = "존재하지 않음";
         String ERROR_CODE = "인증코드 불일치";
         String CONFLICT = "데이터 충돌";
