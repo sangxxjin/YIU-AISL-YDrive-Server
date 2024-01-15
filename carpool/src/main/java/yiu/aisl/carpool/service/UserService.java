@@ -123,7 +123,6 @@ public class UserService {
   }
 
   public void delete(CustomUserDetails userDetails, SignRequest request) {
-    // 사용자 정보가 이미 토큰에서 인증되었으므로 다시 데이터베이스에서 찾아올 필요 없음
     User user = userDetails.getUser();
 
     if (request.getPwd() == null) {
@@ -213,7 +212,6 @@ public class UserService {
   }
 
   public String profileUpdate(CustomUserDetails userDetails, MyprofileDto myprofileDto) {
-    // 사용자 정보가 이미 토큰에서 인증되었으므로 다시 데이터베이스에서 찾아올 필요 없음
     User user = userDetails.getUser();
 
     if (myprofileDto.getName().isEmpty() || myprofileDto.getPhone().isEmpty()
@@ -245,16 +243,11 @@ public class UserService {
 
 
   public void guestMode(CustomUserDetails customUserDetails) {
-    Optional<User> userOptional = userRepository.findByEmail(
-        customUserDetails.getUser().getEmail());
-    if (userOptional.isPresent()) {
-      User user = userOptional.get();
-      user.setStatus(0);
-      userRepository.save(user);
-    } else {
-      throw new IllegalArgumentException("User not found");
-    }
+    User user = customUserDetails.getUser();
+    user.setStatus(0);
+    userRepository.save(user);
   }
+
 
   public List<GuestUseInfoResponse> getGuestList(
       @AuthenticationPrincipal CustomUserDetails userDetails) {
