@@ -1,6 +1,5 @@
 package yiu.aisl.carpool.service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -11,7 +10,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import yiu.aisl.carpool.Dto.CarpoolDto;
 import yiu.aisl.carpool.Dto.CarpoolRequest;
-import yiu.aisl.carpool.Dto.WaitDto;
 import yiu.aisl.carpool.Dto.WaitRequest;
 import yiu.aisl.carpool.domain.Carpool;
 import yiu.aisl.carpool.domain.User;
@@ -19,10 +17,8 @@ import yiu.aisl.carpool.domain.Wait;
 import yiu.aisl.carpool.exception.CustomException;
 import yiu.aisl.carpool.exception.ErrorCode;
 import yiu.aisl.carpool.repository.CarpoolRepository;
-import yiu.aisl.carpool.repository.UserRepository;
 import yiu.aisl.carpool.repository.WaitRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
-import yiu.aisl.carpool.security.JwtProvider;
 
 
 @Service
@@ -30,46 +26,36 @@ import yiu.aisl.carpool.security.JwtProvider;
 @RequiredArgsConstructor
 public class CarpoolService {
   private final CarpoolRepository carpoolRepository;
-  private final JwtProvider jwtProvider;
-  private final HttpServletRequest httpServletRequest;
-  private final UserRepository userRepository;
   private final WaitRepository waitRepository;
 
-  public boolean create(CarpoolRequest request) throws Exception {
+  public boolean create(CarpoolRequest request, CustomUserDetails customUserDetails) {
     if (request.getMemberNum() == 0) {
-      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-    } else if (request.getStart().isEmpty() || request.getEnd().isEmpty() || (request.getDate() == null)) {
+      throw new CustomException(ErrorCode.INVALID_MEMBER_NUM);
+    } else if (request.getStart().isEmpty() || request.getEnd().isEmpty()
+        || request.getDate() == null) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
     }
+
+    User user = customUserDetails.getUser();
+    if (user.getStatus() == 0) {
+      throw new CustomException(ErrorCode.CHANGE_TO_DRIVER_MODE_REQUIRED);
+    }
+
     try {
       LocalDateTime createdAt = LocalDateTime.now();
-      String authHeader = httpServletRequest.getHeader("Authorization");
-      if (authHeader != null && authHeader.startsWith("Bearer ")) {
-        String token = authHeader.substring(7);
-        String email = jwtProvider.getEmail(token);
 
-        // 사용자 정보 조회
-        Optional<User> user = userRepository.findByEmail(email);
+      Carpool carpool = Carpool.builder()
+          .carpoolNum(request.getCarpoolNum())
+          .start(request.getStart())
+          .end(request.getEnd())
+          .date(request.getDate())
+          .checkNum(request.getCheckNum())
+          .memberNum(request.getMemberNum())
+          .email(user.getEmail())
+          .createdAt(createdAt)
+          .build();
 
-        if (user.isPresent()) {
-          if (user.get().getStatus() == 0) {
-            throw new IllegalArgumentException("차주 모드로 변경해 주세요.");
-          }
-          else {
-            Carpool carpool = Carpool.builder()
-                .carpoolNum(request.getCarpoolNum())
-                .start(request.getStart())
-                .end(request.getEnd())
-                .date(request.getDate())
-                .checkNum(request.getCheckNum())
-                .memberNum(request.getMemberNum())
-                .email(email)
-                .createdAt(createdAt)
-                .build();
-            carpoolRepository.save(carpool);
-          }
-        }else throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
-      }
+      carpoolRepository.save(carpool);
     } catch (DataIntegrityViolationException e) {
       System.out.println(e.getMessage());
       throw new IllegalArgumentException("잘못된 요청입니다.");
