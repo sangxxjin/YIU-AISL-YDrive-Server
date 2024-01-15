@@ -63,47 +63,48 @@ public class CarpoolService {
     return true;
   }
 
-  public boolean apply(WaitRequest request, Integer carpoolNum) throws Exception {
+  public boolean apply(WaitRequest request, Integer carpoolNum,
+      CustomUserDetails customUserDetails) {
     try {
       LocalDateTime createdAt = LocalDateTime.now();
-      String authHeader = httpServletRequest.getHeader("Authorization");
 
-      if(authHeader != null && authHeader.startsWith("Bearer ")) {
-        String token = authHeader.substring(7);
-        String email = jwtProvider.getEmail(token);  // 현재 로그인한 사용자의 이메일
-        Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNum(carpoolNum);
-        if(carpoolOptional.isPresent()) {
-          Carpool carpool = carpoolOptional.get();
-          String ownerEmail = carpool.getEmail();  // 게시물을 작성한 사용자의 이메일
-          if(carpool.getCheckNum() == 3) {
-            throw new CustomException(ErrorCode.Application_Deadline); // 신청이 마감된 경우
-          }
+      User currentUser = customUserDetails.getUser();
+      String email = currentUser.getEmail();  // 현재 로그인한 사용자의 이메일
 
-          // 사용자가 이미 해당 carpoolNum에 대해 신청한 기록이 있는지 확인
+      Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNum(carpoolNum);
+
+      if (carpoolOptional.isPresent()) {
+        Carpool carpool = carpoolOptional.get();
+
+        if (carpool.getCheckNum() == 3) {
+          throw new CustomException(ErrorCode.APPLICATION_DEADLINE); // 신청이 마감된 경우
+        }
+
+        if (!email.equals(carpool.getEmail())) {
           boolean alreadyApplied = waitRepository.existsByCarpoolNumAndGuest(carpool, email);
 
           if (!alreadyApplied) {
-            if (!email.equals(ownerEmail)) {
-              int memberNum = carpool.getMemberNum();
-              if (memberNum > 0) {
-                Wait wait = Wait.builder()
-                    .waitNum(request.getWaitNum())
-                    .carpoolNum(carpool)
-                    .guest(email)
-                    .owner(ownerEmail)
-                    .checkNum(request.getCheckNum())
-                    .createdAt(createdAt)
-                    .build();
-                waitRepository.save(wait);
-              } else {
-                throw new CustomException(ErrorCode.Number_Of_Applications_Exceeded);
-              }
+            int memberNum = carpool.getMemberNum();
+
+            if (memberNum > 0) {
+              Wait wait = Wait.builder()
+                  .waitNum(request.getWaitNum())
+                  .carpoolNum(carpool)
+                  .guest(email)
+                  .owner(carpool.getEmail())
+                  .checkNum(request.getCheckNum())
+                  .createdAt(createdAt)
+                  .build();
+
+              waitRepository.save(wait);
             } else {
-              throw new CustomException(ErrorCode.Post_Written_By_Me);
+              throw new CustomException(ErrorCode.NUMBER_OF_APPLICATIONS_EXCEEDED);
             }
           } else {
-            throw new CustomException(ErrorCode.Already_Applied);
+            throw new CustomException(ErrorCode.ALREADY_APPLIED);
           }
+        } else {
+          throw new CustomException(ErrorCode.POST_WRITTEN_BY_ME);
         }
       }
     } catch (DataIntegrityViolationException e) {
