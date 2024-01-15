@@ -113,29 +113,33 @@ public class CarpoolService {
     }
     return true;
   }
-  public void decide(CustomUserDetails userDetails, Integer carpoolNum, Integer waitNum, WaitDto waitDto){
+
+  public void accept(CustomUserDetails userDetails, Integer carpoolNum, Integer waitNum) {
     String email = userDetails.getUser().getEmail();
-    Optional<Wait> waitOptional = waitRepository.findByOwnerAndCarpoolNum_CarpoolNumAndWaitNum(email,carpoolNum,waitNum);
-    Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNum(carpoolNum);
-    Carpool carpool = carpoolOptional.get();
-    if(carpool.getMemberNum() == 0) throw new CustomException(ErrorCode.Number_Of_Applications_Exceeded);
-    if (waitOptional.isPresent()){
-      Wait wait = waitOptional.get();
-      if(wait.getCheckNum() == 1) {
-        throw new CustomException(ErrorCode.Already_Accept);
-      }
-      wait.setCheckNum(waitDto.getCheckNum());
-      if (waitDto.getCheckNum()==1)
-        // 게시물의 신청 인원 수 - 1
-        carpool.setMemberNum(carpool.getMemberNum() - 1);
-        if(carpool.getMemberNum() == 0) {
-          carpool.setCheckNum(2);
-        } else carpool.setCheckNum(1);
-      waitRepository.save(wait);
-      carpoolRepository.save(carpool);
-    } else {
-      throw new IllegalArgumentException("찾을수가 없습니다.");
+
+    Wait wait = waitRepository.findByOwnerAndCarpoolNum_CarpoolNumAndWaitNum(email, carpoolNum,
+            waitNum)
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
+
+    Carpool carpool = carpoolRepository.findByCarpoolNum(carpoolNum)
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
+
+    if (carpool.getMemberNum() == 0) {
+      throw new CustomException(ErrorCode.NUMBER_OF_APPLICATIONS_EXCEEDED);
     }
+
+    if (wait.getCheckNum() == 1) {
+      throw new CustomException(ErrorCode.ALREADY_ACCEPT);
+    }
+
+    // 수락 처리
+    wait.setCheckNum(1);
+    carpool.setMemberNum(carpool.getMemberNum() - 1);
+    carpool.setCheckNum(carpool.getMemberNum() == 0 ? 2 : 1);
+
+    // 변경 내용 저장
+    waitRepository.save(wait);
+    carpoolRepository.save(carpool);
   }
   public void deny(CustomUserDetails userDetails, Integer carpoolNum, Integer waitNum, WaitDto waitDto){
     String email = userDetails.getUser().getEmail();
