@@ -235,26 +235,32 @@ public class CarpoolService {
 
   public void delete(CustomUserDetails userDetails, Integer carpoolNum) {
     String email = userDetails.getUser().getEmail();
-    Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum,
-        email);
 
-    if (carpoolOptional.isPresent()) {
-      Carpool carpool = carpoolOptional.get();
+    Carpool carpool = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email)
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
 
-      // 현재 시간
-      LocalDateTime now = LocalDateTime.now();
+    // 현재 시간
+    LocalDateTime now = LocalDateTime.now();
 
-      // 차이 계산
-      long hoursDifference = ChronoUnit.HOURS.between(now, carpool.getDate());
+    // 차이 계산
+    long hoursDifference = ChronoUnit.HOURS.between(now, carpool.getDate());
 
-      // 차이가 12시간 이상이면 삭제
-      if (Math.abs(hoursDifference) >= 12) {
-        carpoolRepository.delete(carpool);
-      } else {
-        throw new IllegalArgumentException("12시간 이전에 생성된 카풀만 삭제할 수 있습니다.");
-      }
-    } else {
-      throw new IllegalArgumentException("찾을수가 없습니다.");
+    // 차이가 12시간 미만이면 예외 발생
+    if (Math.abs(hoursDifference) < 12) {
+      throw new CustomException(ErrorCode.CANNOT_DELETE_CARPOOL_HOUR);
     }
+
+    // Wait 엔터티 검사
+    List<Wait> waitingList = waitRepository.findByCarpoolNumAndCheckNum(carpool, 0);
+    List<Wait> acceptedList = waitRepository.findByCarpoolNumAndCheckNum(carpool, 1);
+
+    if (!waitingList.isEmpty() || !acceptedList.isEmpty()) {
+      throw new CustomException(ErrorCode.CANNOT_DELETE_CARPOOL_WITH_WAITING);
+    }
+    waitRepository.deleteAllByCarpoolNum(carpool);
+
+    // 삭제 가능한 경우 삭제
+    carpoolRepository.delete(carpool);
   }
+
 }
