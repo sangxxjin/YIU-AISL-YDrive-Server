@@ -42,7 +42,7 @@ public class UserService {
   private final CarpoolRepository carpoolRepository;
 
 
-  public SignResponse login(SignRequest request) throws Exception {
+  public SignResponse login(SignRequest request) {
     if (request.getEmail().isEmpty() || request.getPwd().isEmpty()) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
     }
@@ -50,7 +50,7 @@ public class UserService {
     String modifiedEmail = request.getEmail() + "@yiu.ac.kr";
 
     User user = userRepository.findByEmail(modifiedEmail).orElseThrow(() ->
-        new CustomException(ErrorCode.NOT_EXIST));
+        new CustomException(ErrorCode.VALID_NOT_STUDENT_ID));
 
     if (!passwordEncoder.matches(request.getPwd(), user.getPwd())) {
       throw new CustomException(ErrorCode.VALID_NOT_PWD);
@@ -71,7 +71,7 @@ public class UserService {
         .build();
   }
 
-  public boolean join(SignRequest request) throws Exception {
+  public boolean join(SignRequest request) {
     // 데이터 없음
     if (request.getEmail().isEmpty() || request.getPwd().isEmpty() || request.getDistrict()
         .isEmpty() || request.getCity().isEmpty() || request.getName().isEmpty()) {
@@ -86,7 +86,7 @@ public class UserService {
     try {
 
       if (request.getEmail().length() != 9) {
-        throw new IllegalArgumentException("이메일은 9자리 숫자로 입력되어야 합니다.");
+        throw new CustomException(ErrorCode.VALID_EMAIL_LENGTH);
       }
       String modifiedEmail = request.getEmail() + "@yiu.ac.kr";
       User user = User.builder()

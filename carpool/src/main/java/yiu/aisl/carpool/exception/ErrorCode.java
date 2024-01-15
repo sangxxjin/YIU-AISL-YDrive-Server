@@ -11,6 +11,7 @@ public enum ErrorCode {
 
     VALID_NOT_STUDENT_ID(401, ResultMessage.VALID_NOT_STUDENT_ID),
     VALID_NOT_PWD(401, ResultMessage.VALID_NOT_PWD),
+    VALID_EMAIL_LENGTH(401, ResultMessage.VALID_EMAIL_LENGTH),
     INVALID_EMAIL_VERIFICATION_CODE(401, ResultMessage.INVALID_EMAIL_VERIFICATION_CODE),
     Application_Deadline(401, ResultMessage.Application_Deadline),
 
@@ -56,6 +57,7 @@ public enum ErrorCode {
     }
 
     public interface ResultMessage {
+        String VALID_EMAIL_LENGTH = "올바르지 않은 이메일 길이";
         String Number_Of_Applications_Exceeded = "신청 인원이 초과됨";
         String Application_Deadline = "신청 마감";
         String Already_Applied = "이미 신청함";
