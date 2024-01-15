@@ -181,17 +181,13 @@ public class CarpoolService {
 
   public void carpoolAcceptFinish(CustomUserDetails userDetails, Integer carpoolNum) {
     String email = userDetails.getUser().getEmail();
-    Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email);
-    if (carpoolOptional.isPresent()) {
-      Carpool carpool = carpoolOptional.get();
-      // 자신의 게시물이 맞으면 해당 게시물에 대한 모든 wait 엔티티 가져오기
-      List<Wait> waits = waitRepository.findByCarpoolNum(carpool);
-      if(carpool.getCheckNum() == 1) {
-        carpool.setCheckNum(2);
-        carpoolRepository.save(carpool);
-      }
-    } else {
-      throw new IllegalArgumentException("찾을 수 없거나 권한이 없습니다.");
+
+    Carpool carpool = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email)
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
+
+    if (carpool.getCheckNum() == 1) {
+      carpool.setCheckNum(2);
+      carpoolRepository.save(carpool);
     }
   }
 
