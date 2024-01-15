@@ -141,19 +141,18 @@ public class CarpoolService {
     waitRepository.save(wait);
     carpoolRepository.save(carpool);
   }
-  public void deny(CustomUserDetails userDetails, Integer carpoolNum, Integer waitNum, WaitDto waitDto){
+
+  public void deny(CustomUserDetails userDetails, Integer carpoolNum, Integer waitNum) {
     String email = userDetails.getUser().getEmail();
-    Optional<Wait> waitOptional = waitRepository.findByOwnerAndCarpoolNum_CarpoolNumAndWaitNum(email,carpoolNum,waitNum);
-    Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNum(carpoolNum);
-    Carpool carpool = carpoolOptional.get();
-    if (waitOptional.isPresent()){
-      Wait wait = waitOptional.get();
-      wait.setCheckNum(2);
-      waitRepository.save(wait);
-    } else {
-      throw new IllegalArgumentException("찾을수가 없습니다.");
-    }
+
+    Wait wait = waitRepository.findByOwnerAndCarpoolNum_CarpoolNumAndWaitNum(email, carpoolNum,
+            waitNum)
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
+
+    wait.setCheckNum(2);
+    waitRepository.save(wait);
   }
+
   public void carpoolFinish(CustomUserDetails userDetails, Integer carpoolNum) {
     String email = userDetails.getUser().getEmail();
     Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email);
