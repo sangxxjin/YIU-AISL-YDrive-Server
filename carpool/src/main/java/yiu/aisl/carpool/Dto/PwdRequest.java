@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class PwdRequest {
     private String pwd;
+    private String newPwd;
 }

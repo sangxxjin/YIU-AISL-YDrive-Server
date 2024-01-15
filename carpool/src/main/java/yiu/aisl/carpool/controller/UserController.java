@@ -69,8 +69,8 @@ public class UserController {
   }
 
   @PostMapping("/user/changepwd")
-  public ResponseEntity<Boolean> join(@RequestBody PwdRequest request) throws Exception {
-    return new ResponseEntity<>(userService.changePwd(request), HttpStatus.OK);
+  public ResponseEntity<Boolean> join(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody PwdRequest request) throws Exception {
+    return new ResponseEntity<>(userService.changePwd(customUserDetails, request), HttpStatus.OK);
   }
   @GetMapping("/myprofile")
   public ResponseEntity<Object> myprofile(@AuthenticationPrincipal CustomUserDetails userDetails) {

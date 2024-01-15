@@ -108,26 +108,17 @@ public class UserService {
     return true;
   }
 
-  public boolean changePwd(PwdRequest request) throws Exception {
-    if (request.getPwd().isEmpty()) {
+  public boolean changePwd(CustomUserDetails customUserDetails, PwdRequest request) throws Exception {
+    User user = customUserDetails.getUser();
+    if (request.getPwd().isEmpty() || request.getNewPwd().isEmpty()) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
     }
-
-    try {
-      String authHeader = httpServletRequest.getHeader("Authorization");
-      if (authHeader != null && authHeader.startsWith("Bearer ")) {
-        String token = authHeader.substring(7);
-        String email = jwtProvider.getEmail(token);
-
-        // 현재 사용자의 이메일이 맞는지 검사를 못하고 있음
-        User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new Exception("사용자의 이메일이 아닙니다."));
-        user.setPwd(passwordEncoder.encode(request.getPwd()));
-      }
-    } catch (DataIntegrityViolationException e) {
-      System.out.println(e.getMessage());
-      throw new IllegalArgumentException("잘못된 요청입니다.");
+    if (passwordEncoder.matches(request.getPwd(), customUserDetails.getPassword())) {
+      user.setPwd(passwordEncoder.encode(request.getNewPwd()));
+    } else {
+      throw new CustomException(ErrorCode.VALID_NOT_PWD);
     }
+    userRepository.save(user);
     return true;
   }
 
