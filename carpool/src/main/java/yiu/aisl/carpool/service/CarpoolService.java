@@ -77,7 +77,7 @@ public class CarpoolService {
       if (carpoolOptional.isPresent()) {
         Carpool carpool = carpoolOptional.get();
 
-        if (carpool.getCheckNum() == 3) {
+        if (carpool.getCheckNum() == 2 || carpool.getCheckNum() == 3) {
           throw new CustomException(ErrorCode.APPLICATION_DEADLINE); // 신청이 마감된 경우
         }
 
@@ -184,7 +184,6 @@ public class CarpoolService {
 
     Carpool carpool = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email)
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
-
     if (carpool.getCheckNum() == 1) {
       carpool.setCheckNum(2);
       carpoolRepository.save(carpool);
