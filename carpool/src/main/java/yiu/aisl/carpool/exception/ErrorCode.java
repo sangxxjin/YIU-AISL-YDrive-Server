@@ -34,6 +34,7 @@ public enum ErrorCode {
     CANNOT_DELETE_CARPOOL_HOUR(403, ResultMessage.CANNOT_DELETE_CARPOOL_HOUR),
     CHANGE_TO_DRIVER_MODE_REQUIRED(403, ResultMessage.CHANGE_TO_DRIVER_MODE_REQUIRED),
     CANNOT_DELETE_CARPOOL_WITH_WAITING(403, ResultMessage.CANNOT_DELETE_CARPOOL_WITH_WAITING),
+    REVIEW_WRITE_NOT_ALLOWED(403, ResultMessage.REVIEW_WRITE_NOT_ALLOWED),
 
     ALREADY_ACCEPT(403, ResultMessage.ALREADY_ACCEPT),
     POST_WRITTEN_BY_ME(405, ResultMessage.POST_WRITTEN_BY_ME),
@@ -61,6 +62,7 @@ public enum ErrorCode {
     }
 
     public interface ResultMessage {
+        String REVIEW_WRITE_NOT_ALLOWED = "리뷰를 작성할 수 없습니다.";
         String CANNOT_DELETE_CARPOOL_WITH_WAITING = "대기중이거나 수락한 게스트가 있어서 삭제할 수 없습니다.";
         String CANNOT_DELETE_CARPOOL_HOUR = "출발 12시간 전에는 삭제할 수 없습니다.";
         String CHANGE_TO_DRIVER_MODE_REQUIRED = "차주 모드로 변경해야 게시글 작성이 가능합니다.";

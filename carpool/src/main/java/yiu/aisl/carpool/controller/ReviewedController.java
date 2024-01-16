@@ -24,18 +24,18 @@ public class ReviewedController {
 
   @PostMapping("/carpool/{carpoolNum}/wait/{waitNum}/owner/reviewed")
   public ResponseEntity<Boolean> ownerReviewed(@PathVariable int carpoolNum, @PathVariable int waitNum,
-      @RequestBody OwnerReviewedRequest request)
+      @RequestBody OwnerReviewedRequest request ,@AuthenticationPrincipal CustomUserDetails customUserDetails)
       throws Exception {
-    return new ResponseEntity<>(reviewedService.ownerReviewed(carpoolNum, waitNum, request),
+    return new ResponseEntity<>(reviewedService.ownerReviewed(carpoolNum, waitNum, request, customUserDetails),
         HttpStatus.OK);
   }
 
 
   @PostMapping("/carpool/{carpoolNum}/wait/{waitNum}/guest/reviewed")
   public ResponseEntity<Boolean> guestReviewed(@PathVariable int carpoolNum, @PathVariable int waitNum,
-      @RequestBody GuestReviewedRequest request)
+      @RequestBody GuestReviewedRequest request, @AuthenticationPrincipal CustomUserDetails customUserDetails)
       throws Exception {
-    return new ResponseEntity<>(reviewedService.guestReviewed(carpoolNum,waitNum,request), HttpStatus.OK);
+    return new ResponseEntity<>(reviewedService.guestReviewed(carpoolNum,waitNum,request, customUserDetails), HttpStatus.OK);
   }
 
   @GetMapping("/list/review/owner")

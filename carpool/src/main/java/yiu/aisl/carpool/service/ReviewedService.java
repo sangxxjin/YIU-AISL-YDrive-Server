@@ -1,6 +1,6 @@
 package yiu.aisl.carpool.service;
 
-import jakarta.servlet.http.HttpServletRequest;
+
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,51 +19,37 @@ import yiu.aisl.carpool.domain.OwnerReviewed;
 import yiu.aisl.carpool.domain.Wait;
 import yiu.aisl.carpool.exception.CustomException;
 import yiu.aisl.carpool.exception.ErrorCode;
-import yiu.aisl.carpool.repository.CarpoolRepository;
 import yiu.aisl.carpool.repository.GuestReviewdRepository;
 import yiu.aisl.carpool.repository.OwnerReviewdRepository;
 import yiu.aisl.carpool.repository.WaitRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
-import yiu.aisl.carpool.security.JwtProvider;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ReviewedService {
 
-  private final HttpServletRequest httpServletRequest;
-  private final JwtProvider jwtProvider;
   private final OwnerReviewdRepository ownerReviewdRepository;
   private final GuestReviewdRepository guestReviewdRepository;
-  private final CarpoolRepository carpoolRepository;
   private final WaitRepository waitRepository;
 
-  public boolean ownerReviewed(int carpoolNum, int waitNum, OwnerReviewedRequest request) throws Exception {
+  public boolean ownerReviewed(int carpoolNum, int waitNum, OwnerReviewedRequest request, CustomUserDetails customUserDetails) {
     if(request.getReview().isEmpty() || request.getStar() == 0) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
     }
     try {
       LocalDateTime createdAt = LocalDateTime.now();
-      String authHeader = httpServletRequest.getHeader("Authorization");
-
-      if (authHeader != null && authHeader.startsWith("Bearer ")) {
-        String token = authHeader.substring(7);
-        String email = jwtProvider.getEmail(token);
+      String email = customUserDetails.getUser().getEmail();
 
         // wait 테이블에서 carpoolNum과 waitNum을 이용하여 해당하는 wait 정보 조회
         Optional<Wait> waitOptional = waitRepository.findByCarpoolNum_CarpoolNumAndWaitNum(carpoolNum, waitNum);
         if (waitOptional.isEmpty()) {
-          throw new IllegalArgumentException("게시물을 찾을 수 없습니다.");
+          throw new CustomException(ErrorCode.NOT_EXIST);
         }
         Wait wait = waitOptional.get();
-
         // checkNum이 3인지 확인하고 현재 사용자가 guest인지 확인하여 리뷰 작성 허용 여부 판단
         if (wait.getCheckNum() != 3 || !wait.getGuest().equals(email)) {
-          throw new IllegalArgumentException("리뷰를 작성할 수 없습니다.");
-        }
-        int starValue = request.getStar();
-        if (starValue < 1 || starValue > 5) {
-          throw new IllegalArgumentException("start 값은 1에서 5 사이어야 합니다.");
+          throw new CustomException(ErrorCode.REVIEW_WRITE_NOT_ALLOWED);
         }
 
         // 리뷰 작성 처리
@@ -76,43 +62,35 @@ public class ReviewedService {
             .build();
 
         ownerReviewdRepository.save(ownerReviewed);
-      } else {
-        throw new IllegalArgumentException("사용자 토큰이 다릅니다.");
-      }
+
     } catch (Exception e) {
-      throw new IllegalArgumentException("리뷰 작성에 실패했습니다.");
+      throw new IllegalArgumentException("리뷰를 작성할 수 없습니다.", e);
+
     }
-    return true; // 리뷰 작성 성공
+    return true;
   }
 
 
 
-  public boolean guestReviewed(int carpoolNum, int waitNum, GuestReviewedRequest request) throws Exception {
+  public boolean guestReviewed(int carpoolNum, int waitNum, GuestReviewedRequest request, CustomUserDetails customUserDetails) {
     if(request.getReview().isEmpty() || request.getStar() == 0) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
     }
     try {
       LocalDateTime createdAt = LocalDateTime.now();
-      String authHeader = httpServletRequest.getHeader("Authorization");
+      String email = customUserDetails.getUser().getEmail();
 
-      if (authHeader != null && authHeader.startsWith("Bearer ")) {
-        String token = authHeader.substring(7);
-        String email = jwtProvider.getEmail(token);
 
         // wait 테이블에서 carpoolNum과 waitNum을 이용하여 해당하는 wait 정보 조회
         Optional<Wait> waitOptional = waitRepository.findByCarpoolNum_CarpoolNumAndWaitNum(carpoolNum, waitNum);
         if (waitOptional.isEmpty()) {
-          throw new IllegalArgumentException("게시물을 찾을 수 없습니다.");
+          throw new CustomException(ErrorCode.NOT_EXIST);
         }
         Wait wait = waitOptional.get();
 
         // checkNum이 3인지 확인하고 현재 사용자가 owner인지 확인하여 리뷰 작성 허용 여부 판단
         if (wait.getCheckNum() != 3 || !wait.getOwner().equals(email)) {
-          throw new IllegalArgumentException("리뷰를 작성할 수 없습니다.");
-        }
-        int starValue = request.getStar();
-        if (starValue < 1 || starValue > 5) {
-          throw new IllegalArgumentException("start 값은 1에서 5 사이어야 합니다.");
+          throw new CustomException(ErrorCode.REVIEW_WRITE_NOT_ALLOWED);
         }
 
         // 리뷰 작성 처리
@@ -125,13 +103,10 @@ public class ReviewedService {
             .build();
 
         guestReviewdRepository.save(guestReviewed);
-      } else {
-        throw new IllegalArgumentException("사용자 토큰이 다릅니다.");
-      }
     } catch (Exception e) {
-      throw new IllegalArgumentException("리뷰 작성에 실패했습니다.");
+      throw new IllegalArgumentException("리뷰를 작성할 수 없습니다.", e);
     }
-    return true; // 리뷰 작성 성공
+    return true;
   }
 
   public List<GuestReviewedResponse> getGuestReview(@AuthenticationPrincipal CustomUserDetails userDetails) {
