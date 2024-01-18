@@ -136,7 +136,7 @@ public class CarpoolService {
     // 수락 처리
     wait.setCheckNum(1);
     carpool.setMemberNum(carpool.getMemberNum() - 1);
-    carpool.setCheckNum(carpool.getMemberNum() == 0 ? 2 : 1);
+//    carpool.setCheckNum(carpool.getMemberNum() == 0 ? 2 : 1);
 
     // 변경 내용 저장
     waitRepository.save(wait);
@@ -261,5 +261,4 @@ public class CarpoolService {
     // 삭제 가능한 경우 삭제
     carpoolRepository.delete(carpool);
   }
-
 }
