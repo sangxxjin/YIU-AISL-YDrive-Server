@@ -37,7 +37,6 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
   private final JwtProvider jwtProvider;
   private final TokenRepository tokenRepository;
-  private final HttpServletRequest httpServletRequest;
   private final WaitRepository waitRepository;
   private final CarpoolRepository carpoolRepository;
 
@@ -47,9 +46,7 @@ public class UserService {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
     }
 
-    String modifiedEmail = request.getEmail() + "@yiu.ac.kr";
-
-    User user = userRepository.findByEmail(modifiedEmail).orElseThrow(() ->
+    User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() ->
         new CustomException(ErrorCode.VALID_NOT_STUDENT_ID));
 
     if (!passwordEncoder.matches(request.getPwd(), user.getPwd())) {
@@ -79,7 +76,7 @@ public class UserService {
     }
 
     // 이미 존재하는 학번
-    if (userRepository.findByEmail(request.getEmail() + "@yiu.ac.kr").isPresent()) {
+    if (userRepository.findByEmail(request.getEmail()).isPresent()) {
       throw new CustomException(ErrorCode.DUPLICATE);
     }
 
@@ -88,9 +85,8 @@ public class UserService {
       if (request.getEmail().length() != 9) {
         throw new CustomException(ErrorCode.VALID_EMAIL_LENGTH);
       }
-      String modifiedEmail = request.getEmail() + "@yiu.ac.kr";
       User user = User.builder()
-          .email(modifiedEmail)
+          .email(request.getEmail())
           .name(request.getName())
           .phone(request.getPhone())
           .home(request.getCity() + " " + request.getDistrict())
@@ -108,7 +104,7 @@ public class UserService {
     return true;
   }
 
-  public boolean changePwd(CustomUserDetails customUserDetails, PwdRequest request) throws Exception {
+  public boolean changePwd(CustomUserDetails customUserDetails, PwdRequest request) {
     User user = customUserDetails.getUser();
     if (request.getPwd().isEmpty() || request.getNewPwd().isEmpty()) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
