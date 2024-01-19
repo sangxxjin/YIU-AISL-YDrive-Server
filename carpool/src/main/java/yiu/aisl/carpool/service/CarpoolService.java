@@ -38,7 +38,7 @@ public class CarpoolService {
   private final StationRepository stationRepository;
 
   public boolean create(CarpoolRequest request, CustomUserDetails customUserDetails) {
-    if (request.getMemberNum() == 0) {
+    if (request.getMemberNum() <= 0) {
       throw new CustomException(ErrorCode.INVALID_MEMBER_NUM);
     } else if (request.getStart().isEmpty() || request.getEnd().isEmpty()
             || request.getDate() == null) {
@@ -144,9 +144,8 @@ public class CarpoolService {
     // 수락 처리
     wait.setCheckNum(1);
     carpool.setMemberNum(carpool.getMemberNum() - 1);
-    carpool.setCheckNum(carpool.getMemberNum() == 0 ? 2 : 1);
+//    carpool.setCheckNum(carpool.getMemberNum() == 0 ? 2 : 1);
 
-    // 변경 내용 저장
     waitRepository.save(wait);
     carpoolRepository.save(carpool);
   }
@@ -268,5 +267,4 @@ public class CarpoolService {
     // 삭제 가능한 경우 삭제
     carpoolRepository.delete(carpool);
   }
-
 }
