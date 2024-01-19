@@ -1,6 +1,5 @@
 package yiu.aisl.carpool.service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 
 import java.util.List;

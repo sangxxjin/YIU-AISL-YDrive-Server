@@ -2,7 +2,6 @@ package yiu.aisl.carpool.service;
 
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import jakarta.mail.internet.MimeMessage;
 import yiu.aisl.carpool.exception.CustomException;
 import yiu.aisl.carpool.exception.ErrorCode;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
 @Service
@@ -37,7 +35,7 @@ public class EmailService {
     }
 
     // 메일 양식 작성
-    public MimeMessage createEmailForm(String email) throws MessagingException, UnsupportedEncodingException {
+    public MimeMessage createEmailForm(String email) throws MessagingException {
         // 코드 생성
         createCode();
         String setFrom = "callikys@naver.com";
@@ -70,7 +68,7 @@ public class EmailService {
     }
 
     // 실제 메일 전송
-    public String sendEmail(String email) throws  MessagingException, UnsupportedEncodingException {
+    public String sendEmail(String email) throws  MessagingException {
         email = email+"@yiu.ac.kr";
         MimeMessage emailForm = createEmailForm(email);
         emailSender.send(emailForm);
