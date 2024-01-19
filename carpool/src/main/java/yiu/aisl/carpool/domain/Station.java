@@ -25,5 +25,5 @@ public class Station {
     @Column
     private String district;
     @Column
-    private String exit;
+    private int exitNum;
 }

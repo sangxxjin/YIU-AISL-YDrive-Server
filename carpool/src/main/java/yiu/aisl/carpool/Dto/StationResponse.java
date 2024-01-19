@@ -15,13 +15,18 @@ public class StationResponse {
     private String stationName;
     private String city;
     private String district;
-    private String exit;
+    private int exitNum;
 
     public StationResponse(Station station) {
         this.city = station.getCity();
         this.district = station.getDistrict();
         this.stationNum = station.getStationNum();
-        this.exit = station.getExit();
+        this.exitNum = station.getExitNum();
         this.stationName = station.getStationName();
     }
+
+    public StationResponse(String city) {
+        this.city = city;
+    }
+
 }

@@ -69,7 +69,7 @@ public class SecurityConfig {
         // 조건별로 요청 허용/제한 설정
         .authorizeHttpRequests(authorize -> authorize
             // 회원가입과 로그인은 모두 승인
-            .requestMatchers("/login", "/join", "/join/emailCheck","/join/emailCheckTrue", "/carpool/stationList").permitAll()
+            .requestMatchers("/login", "/join", "/join/emailCheck","/join/emailCheckTrue", "/carpool/cityList").permitAll()
             // /admin으로 시작하는 요청은 ADMIN 권한이 있는 유저에게만 허용
 //            .requestMatchers("/admin/**").hasRole("ADMIN")
             // /user 로 시작하는 요청은 USER 권한이 있는 유저에게만 허용
