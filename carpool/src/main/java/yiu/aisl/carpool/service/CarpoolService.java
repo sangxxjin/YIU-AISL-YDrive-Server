@@ -30,7 +30,7 @@ public class CarpoolService {
   private final WaitRepository waitRepository;
 
   public boolean create(CarpoolRequest request, CustomUserDetails customUserDetails) {
-    if (request.getMemberNum() == 0) {
+    if (request.getMemberNum() <= 0) {
       throw new CustomException(ErrorCode.INVALID_MEMBER_NUM);
     } else if (request.getStart().isEmpty() || request.getEnd().isEmpty()
         || request.getDate() == null) {
