@@ -3,20 +3,27 @@ package yiu.aisl.carpool.service;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import yiu.aisl.carpool.Dto.CarpoolDto;
 import yiu.aisl.carpool.Dto.CarpoolRequest;
+import yiu.aisl.carpool.Dto.StationResponse;
 import yiu.aisl.carpool.Dto.WaitRequest;
 import yiu.aisl.carpool.domain.Carpool;
+import yiu.aisl.carpool.domain.Station;
 import yiu.aisl.carpool.domain.User;
 import yiu.aisl.carpool.domain.Wait;
 import yiu.aisl.carpool.exception.CustomException;
 import yiu.aisl.carpool.exception.ErrorCode;
 import yiu.aisl.carpool.repository.CarpoolRepository;
+import yiu.aisl.carpool.repository.StationRepository;
 import yiu.aisl.carpool.repository.WaitRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
 
@@ -28,6 +35,7 @@ public class CarpoolService {
 
   private final CarpoolRepository carpoolRepository;
   private final WaitRepository waitRepository;
+  private final StationRepository stationRepository;
 
   public boolean create(CarpoolRequest request, CustomUserDetails customUserDetails) {
     if (request.getMemberNum() == 0) {
@@ -231,7 +239,6 @@ public class CarpoolService {
     carpoolRepository.save(carpool);
   }
 
-
   public void delete(CustomUserDetails userDetails, Integer carpoolNum) {
     String email = userDetails.getUser().getEmail();
 
@@ -262,4 +269,9 @@ public class CarpoolService {
     carpoolRepository.delete(carpool);
   }
 
+  public List<StationResponse> getStationList() {
+    return stationRepository.findAll().stream()
+            .map(StationResponse::new)
+            .collect(Collectors.toList());
+  }
 }
