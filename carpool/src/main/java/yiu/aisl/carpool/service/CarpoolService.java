@@ -267,4 +267,10 @@ public class CarpoolService {
     // 삭제 가능한 경우 삭제
     carpoolRepository.delete(carpool);
   }
+
+  public List<StationResponse> getCityList() {
+    return stationRepository.findDistinctCities().stream()
+            .map(StationResponse::new)
+            .collect(Collectors.toList());
+  }
 }
