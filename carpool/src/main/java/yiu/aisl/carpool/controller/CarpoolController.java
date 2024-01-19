@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import yiu.aisl.carpool.Dto.CarpoolDto;
 import yiu.aisl.carpool.Dto.CarpoolRequest;
+import yiu.aisl.carpool.Dto.StationResponse;
 import yiu.aisl.carpool.Dto.WaitRequest;
 import yiu.aisl.carpool.domain.Wait;
 import yiu.aisl.carpool.repository.CarpoolRepository;
@@ -32,6 +33,7 @@ public class CarpoolController {
   private final CarpoolRepository carpoolRepository;
   private final CarpoolService carpoolService;
   private final ScreenService screenService;
+
   @PostMapping("/create")
   public ResponseEntity<Boolean> carpoolCreate(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody CarpoolRequest request)
           throws Exception {
@@ -56,14 +58,14 @@ public class CarpoolController {
 
   @PutMapping("/accept/{carpoolNum}/{waitNum}")
   public ResponseEntity<Object> waitDecide(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-      @PathVariable Integer carpoolNum, @PathVariable Integer waitNum) {
+                                           @PathVariable Integer carpoolNum, @PathVariable Integer waitNum) {
     carpoolService.accept(customUserDetails, carpoolNum, waitNum);
     return ResponseEntity.ok("수락 성공");
   }
 
   @PutMapping("/deny/{carpoolNum}/{waitNum}")
   public ResponseEntity<Object> waitDeny(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                           @PathVariable Integer carpoolNum, @PathVariable Integer waitNum) {
+                                         @PathVariable Integer carpoolNum, @PathVariable Integer waitNum) {
     carpoolService.deny(customUserDetails, carpoolNum, waitNum);
     return ResponseEntity.ok("거절 성공");
   }
@@ -83,7 +85,7 @@ public class CarpoolController {
 
   @PostMapping("/{carpoolNum}/finish")
   public ResponseEntity<String> carpoolFinish(
-      @AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Integer carpoolNum) {
+          @AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Integer carpoolNum) {
     carpoolService.carpoolFinish(customUserDetails, carpoolNum);
     return ResponseEntity.ok("도착");
   }
@@ -98,5 +100,10 @@ public class CarpoolController {
   @GetMapping("/{carpoolNum}/apply-list")
   public List<Wait> getWaitList(@PathVariable Integer carpoolNum,@AuthenticationPrincipal CustomUserDetails customUserDetails) {
     return screenService.getWaitList(carpoolNum, customUserDetails);
+  }
+
+  @GetMapping("/cityList")
+  public List<StationResponse> getCityList() {
+    return carpoolService.getCityList();
   }
 }

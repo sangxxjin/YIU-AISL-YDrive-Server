@@ -3,20 +3,27 @@ package yiu.aisl.carpool.service;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import yiu.aisl.carpool.Dto.CarpoolDto;
 import yiu.aisl.carpool.Dto.CarpoolRequest;
+import yiu.aisl.carpool.Dto.StationResponse;
 import yiu.aisl.carpool.Dto.WaitRequest;
 import yiu.aisl.carpool.domain.Carpool;
+import yiu.aisl.carpool.domain.Station;
 import yiu.aisl.carpool.domain.User;
 import yiu.aisl.carpool.domain.Wait;
 import yiu.aisl.carpool.exception.CustomException;
 import yiu.aisl.carpool.exception.ErrorCode;
 import yiu.aisl.carpool.repository.CarpoolRepository;
+import yiu.aisl.carpool.repository.StationRepository;
 import yiu.aisl.carpool.repository.WaitRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
 
@@ -28,12 +35,13 @@ public class CarpoolService {
 
   private final CarpoolRepository carpoolRepository;
   private final WaitRepository waitRepository;
+  private final StationRepository stationRepository;
 
   public boolean create(CarpoolRequest request, CustomUserDetails customUserDetails) {
     if (request.getMemberNum() <= 0) {
       throw new CustomException(ErrorCode.INVALID_MEMBER_NUM);
     } else if (request.getStart().isEmpty() || request.getEnd().isEmpty()
-        || request.getDate() == null) {
+            || request.getDate() == null) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
     }
 
@@ -46,15 +54,15 @@ public class CarpoolService {
       LocalDateTime createdAt = LocalDateTime.now();
 
       Carpool carpool = Carpool.builder()
-          .carpoolNum(request.getCarpoolNum())
-          .start(request.getStart())
-          .end(request.getEnd())
-          .date(request.getDate())
-          .checkNum(request.getCheckNum())
-          .memberNum(request.getMemberNum())
-          .email(user.getEmail())
-          .createdAt(createdAt)
-          .build();
+              .carpoolNum(request.getCarpoolNum())
+              .start(request.getStart())
+              .end(request.getEnd())
+              .date(request.getDate())
+              .checkNum(request.getCheckNum())
+              .memberNum(request.getMemberNum())
+              .email(user.getEmail())
+              .createdAt(createdAt)
+              .build();
 
       carpoolRepository.save(carpool);
     } catch (DataIntegrityViolationException e) {
@@ -65,7 +73,7 @@ public class CarpoolService {
   }
 
   public boolean apply(WaitRequest request, Integer carpoolNum,
-      CustomUserDetails customUserDetails) {
+                       CustomUserDetails customUserDetails) {
     try {
       LocalDateTime createdAt = LocalDateTime.now();
 
@@ -89,13 +97,13 @@ public class CarpoolService {
 
             if (memberNum > 0) {
               Wait wait = Wait.builder()
-                  .waitNum(request.getWaitNum())
-                  .carpoolNum(carpool)
-                  .guest(email)
-                  .owner(carpool.getEmail())
-                  .checkNum(request.getCheckNum())
-                  .createdAt(createdAt)
-                  .build();
+                      .waitNum(request.getWaitNum())
+                      .carpoolNum(carpool)
+                      .guest(email)
+                      .owner(carpool.getEmail())
+                      .checkNum(request.getCheckNum())
+                      .createdAt(createdAt)
+                      .build();
 
               waitRepository.save(wait);
             } else {
@@ -119,11 +127,11 @@ public class CarpoolService {
     String email = userDetails.getUser().getEmail();
 
     Wait wait = waitRepository.findByOwnerAndCarpoolNum_CarpoolNumAndWaitNum(email, carpoolNum,
-            waitNum)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
+                    waitNum)
+            .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
 
     Carpool carpool = carpoolRepository.findByCarpoolNum(carpoolNum)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
+            .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
 
     if (carpool.getMemberNum() == 0) {
       throw new CustomException(ErrorCode.NUMBER_OF_APPLICATIONS_EXCEEDED);
@@ -146,8 +154,8 @@ public class CarpoolService {
     String email = userDetails.getUser().getEmail();
 
     Wait wait = waitRepository.findByOwnerAndCarpoolNum_CarpoolNumAndWaitNum(email, carpoolNum,
-            waitNum)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
+                    waitNum)
+            .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
 
     wait.setCheckNum(2);
     waitRepository.save(wait);
@@ -157,7 +165,7 @@ public class CarpoolService {
     String email = userDetails.getUser().getEmail();
 
     Carpool carpool = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
+            .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
 
     if (carpool.getCheckNum() == 2) {
       carpool.setCheckNum(3);
@@ -182,7 +190,7 @@ public class CarpoolService {
     String email = userDetails.getUser().getEmail();
 
     Carpool carpool = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
+            .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
     if (carpool.getCheckNum() == 1) {
       carpool.setCheckNum(2);
       carpoolRepository.save(carpool);
@@ -194,13 +202,13 @@ public class CarpoolService {
 
     // 데이터가 충분하지 않은 경우
     if (carpoolDto.getMemberNum() == 0 || carpoolDto.getStart().isEmpty() || carpoolDto.getEnd()
-        .isEmpty() || carpoolDto.getDate() == null) {
+            .isEmpty() || carpoolDto.getDate() == null) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
     }
 
     // 카풀 정보 조회
     Carpool carpool = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
+            .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
 
     // 현재 시간
     LocalDateTime now = LocalDateTime.now();
@@ -230,12 +238,11 @@ public class CarpoolService {
     carpoolRepository.save(carpool);
   }
 
-
   public void delete(CustomUserDetails userDetails, Integer carpoolNum) {
     String email = userDetails.getUser().getEmail();
 
     Carpool carpool = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
+            .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
 
     // 현재 시간
     LocalDateTime now = LocalDateTime.now();

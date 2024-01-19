@@ -13,5 +13,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserStateDto {
   private int state;
-
+  private String email;
 }

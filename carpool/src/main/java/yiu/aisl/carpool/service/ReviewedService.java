@@ -3,6 +3,7 @@ package yiu.aisl.carpool.service;
 
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -10,15 +11,18 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import yiu.aisl.carpool.Dto.GuestReviewedRequest;
 import yiu.aisl.carpool.Dto.GuestReviewedResponse;
 import yiu.aisl.carpool.Dto.OwnerReviewedRequest;
 import yiu.aisl.carpool.Dto.OwnerReviewedResponse;
+import yiu.aisl.carpool.domain.Carpool;
 import yiu.aisl.carpool.domain.GuestReviewed;
 import yiu.aisl.carpool.domain.OwnerReviewed;
 import yiu.aisl.carpool.domain.Wait;
 import yiu.aisl.carpool.exception.CustomException;
 import yiu.aisl.carpool.exception.ErrorCode;
+import yiu.aisl.carpool.repository.CarpoolRepository;
 import yiu.aisl.carpool.repository.GuestReviewdRepository;
 import yiu.aisl.carpool.repository.OwnerReviewdRepository;
 import yiu.aisl.carpool.repository.WaitRepository;
@@ -32,6 +36,7 @@ public class ReviewedService {
   private final OwnerReviewdRepository ownerReviewdRepository;
   private final GuestReviewdRepository guestReviewdRepository;
   private final WaitRepository waitRepository;
+  private final CarpoolRepository carpoolRepository;
 
   public boolean ownerReviewed(int carpoolNum, int waitNum, OwnerReviewedRequest request, CustomUserDetails customUserDetails) {
     if(request.getReview().isEmpty() || request.getStar() == 0) {
@@ -117,10 +122,17 @@ public class ReviewedService {
             .collect(Collectors.toList());
   }
 
-  public List<OwnerReviewedResponse> getOwnerReview(@AuthenticationPrincipal CustomUserDetails userDetails) {
+  public List<OwnerReviewedResponse> getOwnerReview(@RequestParam int carpoolNum, @AuthenticationPrincipal CustomUserDetails userDetails) {
     String userEmail = userDetails.getUser().getEmail();
-    List<OwnerReviewed> myReviews = ownerReviewdRepository.findByEmail(userEmail);
-    return myReviews.stream()
+    Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNum(carpoolNum);
+
+    if(carpoolOptional.isEmpty()) {
+      return Collections.emptyList();
+    }
+    String authorEmail = carpoolOptional.get().getEmail();
+
+    List<OwnerReviewed> authorReviews = ownerReviewdRepository.findByEmail(authorEmail);
+    return authorReviews.stream()
             .map(OwnerReviewedResponse::new)
             .collect(Collectors.toList());
   }
