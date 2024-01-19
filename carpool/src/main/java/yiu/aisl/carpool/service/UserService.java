@@ -205,8 +205,9 @@ public class UserService {
   public Object getUserStatus(CustomUserDetails userDetails) {
     Optional<User> user = userRepository.findByEmail(userDetails.getUser().getEmail());
     return UserStateDto.builder()
-        .state(user.get().getStatus())
-        .build();
+            .state(user.get().getStatus())
+            .email(user.get().getEmail())
+            .build();
   }
 
   public String profileUpdate(CustomUserDetails userDetails, MyprofileDto myprofileDto) {
