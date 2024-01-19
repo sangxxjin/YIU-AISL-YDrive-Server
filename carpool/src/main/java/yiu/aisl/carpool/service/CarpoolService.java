@@ -138,7 +138,6 @@ public class CarpoolService {
     carpool.setMemberNum(carpool.getMemberNum() - 1);
 //    carpool.setCheckNum(carpool.getMemberNum() == 0 ? 2 : 1);
 
-    // 변경 내용 저장
     waitRepository.save(wait);
     carpoolRepository.save(carpool);
   }

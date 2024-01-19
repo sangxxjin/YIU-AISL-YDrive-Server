@@ -76,7 +76,7 @@ public class UserService {
 
     // 이미 존재하는 학번
     if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-      throw new CustomException(ErrorCode.DUPLICATE);
+      throw new CustomException(ErrorCode.DUPLICATE_STUDENT_ID);
     }
 
     try {
