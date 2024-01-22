@@ -1,6 +1,7 @@
 package yiu.aisl.carpool.service;
 
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,9 @@ public class ScreenService {
   private final WaitRepository waitRepository;
 
   public List<CarpoolResponse> getCarpool() {
+    LocalDateTime currentDateTime = LocalDateTime.now();
     return carpoolRepository.findAll().stream()
+        .filter(carpool -> carpool.getDate().isAfter(currentDateTime))
         .map(CarpoolResponse::new)
         .collect(Collectors.toList());
   }
