@@ -39,9 +39,7 @@ public class ReviewedService {
   private final CarpoolRepository carpoolRepository;
 
   public boolean ownerReviewed(int carpoolNum, int waitNum, OwnerReviewedRequest request, CustomUserDetails customUserDetails) {
-    if(request.getReview().isEmpty() || request.getStar() == 0) {
-      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-    }
+    validateReviewRequest(request.getReview(), request.getStar());
     try {
       LocalDateTime createdAt = LocalDateTime.now();
       String email = customUserDetails.getUser().getEmail();
@@ -78,9 +76,7 @@ public class ReviewedService {
 
 
   public boolean guestReviewed(int carpoolNum, int waitNum, GuestReviewedRequest request, CustomUserDetails customUserDetails) {
-    if(request.getReview().isEmpty() || request.getStar() == 0) {
-      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-    }
+    validateReviewRequest(request.getReview(), request.getStar());
     try {
       LocalDateTime createdAt = LocalDateTime.now();
       String email = customUserDetails.getUser().getEmail();
@@ -136,4 +132,11 @@ public class ReviewedService {
             .map(OwnerReviewedResponse::new)
             .collect(Collectors.toList());
   }
+
+  private void validateReviewRequest(String review, int star) {
+    if (review.isEmpty() || star == 0) {
+      throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+    }
+  }
+
 }
