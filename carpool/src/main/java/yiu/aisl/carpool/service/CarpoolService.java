@@ -191,7 +191,7 @@ public class CarpoolService {
 
     Carpool carpool = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum, email)
             .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
-    if (carpool.getCheckNum() == 1) {
+    if (carpool.getCheckNum() == 1 || carpool.getCheckNum() == 0) {
       carpool.setCheckNum(2);
       carpoolRepository.save(carpool);
     }

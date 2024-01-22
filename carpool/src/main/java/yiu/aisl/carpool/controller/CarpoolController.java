@@ -90,7 +90,7 @@ public class CarpoolController {
     return ResponseEntity.ok("도착");
   }
 
-  @PostMapping("/{carpoolNum}/acceptFinish")
+  @PutMapping("/{carpoolNum}/acceptFinish")
   public ResponseEntity<String> carpoolAcceptFinish(
           @AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Integer carpoolNum) {
     carpoolService.carpoolAcceptFinish(customUserDetails, carpoolNum);
