@@ -21,7 +21,6 @@ import yiu.aisl.carpool.Dto.CarpoolRequest;
 import yiu.aisl.carpool.Dto.StationResponse;
 import yiu.aisl.carpool.Dto.WaitRequest;
 import yiu.aisl.carpool.domain.Wait;
-import yiu.aisl.carpool.repository.CarpoolRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
 import yiu.aisl.carpool.service.CarpoolService;
 import yiu.aisl.carpool.service.ScreenService;
@@ -30,7 +29,7 @@ import yiu.aisl.carpool.service.ScreenService;
 @RequestMapping("/carpool")
 @RequiredArgsConstructor
 public class CarpoolController {
-  private final CarpoolRepository carpoolRepository;
+
   private final CarpoolService carpoolService;
   private final ScreenService screenService;
 

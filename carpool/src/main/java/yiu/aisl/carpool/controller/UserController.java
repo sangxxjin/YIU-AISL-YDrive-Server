@@ -21,8 +21,6 @@ import java.io.UnsupportedEncodingException;
 @RequiredArgsConstructor
 public class UserController {
 
-  private final UserRepository userRepository;
-  private final WaitRepository waitRepository;
   private final UserService userService;
   private final EmailService emailService;
 
