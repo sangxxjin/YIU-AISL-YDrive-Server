@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import yiu.aisl.carpool.domain.Carpool;
-import yiu.aisl.carpool.domain.Wait;
 
 public interface CarpoolRepository extends JpaRepository<Carpool, String> {
   Optional<Carpool> findByCarpoolNum(Integer carpoolNum);
