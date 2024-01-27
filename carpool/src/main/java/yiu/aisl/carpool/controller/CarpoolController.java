@@ -101,6 +101,11 @@ public class CarpoolController {
     return screenService.getWaitList(carpoolNum, customUserDetails);
   }
 
+  @GetMapping("/{carpoolNum}/apply-listAll")
+  public List<Wait> getWaitListAll(@PathVariable Integer carpoolNum,@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    return screenService.getWaitListAll(carpoolNum, customUserDetails);
+  }
+
   @GetMapping("/cityList")
   public List<StationResponse> getCityList() {
     return carpoolService.getCityList();
