@@ -59,4 +59,22 @@ public class ScreenService {
     }
   }
 
+  public List<Wait> getWaitListAll(Integer carpoolNum, CustomUserDetails userDetails) {
+
+    String email = userDetails.getUser().getEmail();
+    Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNumAndEmail(carpoolNum,
+            email);
+
+    if (carpoolOptional.isPresent()) {
+      Carpool carpool = carpoolOptional.get();
+      List<Wait> waits = waitRepository.findByCarpoolNum(carpool);
+
+      return waits.stream()
+              .filter(wait -> wait.getCheckNum() == 3)
+              .collect(Collectors.toList());
+    } else {
+      throw new CustomException(ErrorCode.NOT_EXIST);
+    }
+  }
+
 }
