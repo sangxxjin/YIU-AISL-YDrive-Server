@@ -45,10 +45,10 @@ public class ReviewedController {
     return new ResponseEntity<>(reviewedService.getOwnerReview(carpoolNum, userDetails), headers, HttpStatus.OK);
   }
 
-  @GetMapping("/list/review/guest")
-  public ResponseEntity<Object> getGuestReview(@AuthenticationPrincipal CustomUserDetails userDetails) {
+  @GetMapping("/list/review/guest/{email}")
+  public ResponseEntity<Object> getGuestReview(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable String email) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-    return new ResponseEntity<>(reviewedService.getGuestReview(userDetails), headers, HttpStatus.OK);
+    return new ResponseEntity<>(reviewedService.getGuestReview(userDetails, email), headers, HttpStatus.OK);
   }
 }
