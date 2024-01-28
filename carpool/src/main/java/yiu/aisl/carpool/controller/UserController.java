@@ -13,6 +13,7 @@ import yiu.aisl.carpool.repository.UserRepository;
 import yiu.aisl.carpool.repository.WaitRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
 import yiu.aisl.carpool.service.EmailService;
+import yiu.aisl.carpool.service.ScreenService;
 import yiu.aisl.carpool.service.UserService;
 
 import jakarta.mail.MessagingException;
@@ -23,6 +24,7 @@ public class UserController {
 
   private final UserService userService;
   private final EmailService emailService;
+  private final ScreenService screenService;
 
   @PostMapping("/join")
   public ResponseEntity<Boolean> join(@RequestBody SignRequest request) throws Exception {
@@ -110,5 +112,12 @@ public class UserController {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
     return new ResponseEntity<>(userService.getOwnerList(userDetails), headers, HttpStatus.OK);
+  }
+
+  @GetMapping("/list/mywait")
+  public ResponseEntity<Object> getMyWaitList(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+    return new ResponseEntity<>(screenService.getMyWaitList(userDetails), headers, HttpStatus.OK);
   }
 }

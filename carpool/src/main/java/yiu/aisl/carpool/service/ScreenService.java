@@ -77,4 +77,10 @@ public class ScreenService {
     }
   }
 
+  public List<Wait> getMyWaitList(CustomUserDetails userDetails) {
+    String email = userDetails.getUser().getEmail();
+    List<Wait> waits = waitRepository.findByGuest(email);
+    return waits.stream()
+            .collect(Collectors.toList());
+  }
 }

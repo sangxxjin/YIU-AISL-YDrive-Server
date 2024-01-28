@@ -31,4 +31,5 @@ public class User {
   private int status;
 
   private String refreshToken;
+  private String accessToken;
 }
