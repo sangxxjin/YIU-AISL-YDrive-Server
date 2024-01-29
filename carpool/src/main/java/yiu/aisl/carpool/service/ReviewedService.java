@@ -66,6 +66,8 @@ public class ReviewedService {
             .email(wait.getOwner())
             .build();
 
+        wait.setCheckNum(4);
+
         ownerReviewdRepository.save(ownerReviewed);
 
     } catch (Exception e) {
