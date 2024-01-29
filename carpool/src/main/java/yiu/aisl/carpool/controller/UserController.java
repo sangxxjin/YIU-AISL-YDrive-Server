@@ -107,6 +107,13 @@ public class UserController {
     return new ResponseEntity<>(userService.getGuestList(userDetails), headers, HttpStatus.OK);
   }
 
+  @GetMapping("/list/guest/{email}")
+  public ResponseEntity<Object> getGuestList1(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable String email) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+    return new ResponseEntity<>(userService.getGuestList1(userDetails, email), headers, HttpStatus.OK);
+  }
+
   @GetMapping("/list/owner")
   public ResponseEntity<Object> getOwnerList(@AuthenticationPrincipal CustomUserDetails userDetails) {
     HttpHeaders headers = new HttpHeaders();

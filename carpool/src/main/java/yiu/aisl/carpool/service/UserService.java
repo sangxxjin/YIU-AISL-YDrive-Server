@@ -13,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import yiu.aisl.carpool.Dto.*;
 import yiu.aisl.carpool.domain.Carpool;
 import yiu.aisl.carpool.domain.Token;
@@ -250,6 +251,14 @@ public class UserService {
     return waits.stream()
         .map(GuestUseInfoResponse::new)
         .collect(Collectors.toList());
+  }
+
+  public List<GuestUseInfoResponse> getGuestList1(
+          @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable String email) {
+    List<Wait> waits = waitRepository.findByCheckNumAndGuestWithCarpool(email);
+    return waits.stream()
+            .map(GuestUseInfoResponse::new)
+            .collect(Collectors.toList());
   }
 
   public List<OwnerUseInfoResponse> getOwnerList(
