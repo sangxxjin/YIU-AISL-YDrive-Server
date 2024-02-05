@@ -64,6 +64,8 @@ public class ReviewedService {
             .email(wait.getOwner())
             .build();
 
+        wait.setCheckNum(4);
+
         ownerReviewdRepository.save(ownerReviewed);
 
     } catch (Exception e) {
@@ -110,9 +112,8 @@ public class ReviewedService {
     return true;
   }
 
-  public List<GuestReviewedResponse> getGuestReview(@AuthenticationPrincipal CustomUserDetails userDetails) {
-    String userEmail = userDetails.getUser().getEmail();
-    List<GuestReviewed> myReviews = guestReviewdRepository.findByEmail(userEmail);
+  public List<GuestReviewedResponse> getGuestReview(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam String email) {
+    List<GuestReviewed> myReviews = guestReviewdRepository.findByEmail(email);
     return myReviews.stream()
             .map(GuestReviewedResponse::new)
             .collect(Collectors.toList());

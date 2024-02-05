@@ -106,8 +106,8 @@ public class CarpoolController {
     return screenService.getWaitListAll(carpoolNum, customUserDetails);
   }
 
-  @GetMapping("/cityList")
-  public List<StationResponse> getCityList() {
-    return carpoolService.getCityList();
-  }
+//  @GetMapping("/cityList")
+//  public List<StationResponse> getCityList() {
+//    return carpoolService.getCityList();
+//  }
 }
