@@ -221,7 +221,7 @@ public class UserService {
 
     if (myprofileDto.getCarNum() != null) {
       user.setStatus(1);
-    }
+    } else user.setStatus(0);
 
     userRepository.save(user);
     return "success";
@@ -229,7 +229,7 @@ public class UserService {
 
   public void ownerMode(CustomUserDetails customUserDetails) {
     User user = customUserDetails.getUser();
-    if (user.getCarNum() == null) {
+    if (user.getCarNum().isEmpty()) {
       throw new CustomException(ErrorCode.CAR_NOT_EXIST);
     }
     user.setStatus(1);
