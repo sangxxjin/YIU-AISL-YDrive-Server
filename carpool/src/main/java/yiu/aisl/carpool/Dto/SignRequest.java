@@ -21,4 +21,6 @@ public class SignRequest {
 
   private String carNum;
 
+  private String fcmToken;
+
 }

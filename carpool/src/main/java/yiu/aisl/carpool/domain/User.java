@@ -29,6 +29,8 @@ public class User {
   private String carNum;
   @Column
   private int status;
+  @Column
+  private String fcmToken;
 
   private String refreshToken;
   private String accessToken;

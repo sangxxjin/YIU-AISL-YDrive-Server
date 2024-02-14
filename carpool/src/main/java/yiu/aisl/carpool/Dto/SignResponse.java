@@ -24,11 +24,14 @@ public class SignResponse {
 
   private TokenDto token;
 
+  private String fcmToken;
+
   public SignResponse(User user) {
     this.email = user.getEmail();
     this.name = user.getName();
     this.phone = user.getPhone();
     this.home = user.getHome();
     this.carNum = user.getCarNum();
+    this.fcmToken = user.getFcmToken();
   }
 }

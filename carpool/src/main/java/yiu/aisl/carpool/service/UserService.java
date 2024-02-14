@@ -54,6 +54,7 @@ public class UserService {
     }
 
     user.setRefreshToken(createRefreshToken(user));
+    user.setFcmToken(request.getFcmToken());
 
     return SignResponse.builder()
         .email(user.getEmail())
@@ -61,6 +62,7 @@ public class UserService {
         .phone(user.getPhone())
         .home(user.getHome())
         .carNum(user.getCarNum())
+            .fcmToken(user.getFcmToken())
         .token(TokenDto.builder()
             .access_token(jwtProvider.createToken(user.getEmail()))
             .refresh_token(user.getRefreshToken())
@@ -93,8 +95,8 @@ public class UserService {
           .pwd(passwordEncoder.encode(request.getPwd()))
           .carNum(request.getCarNum())
           .build();
-      if (request.getCarNum() != null) {
-        user.setStatus(1);
+      if (request.getCarNum().isEmpty()) {
+        user.setStatus(0);
       }
       userRepository.save(user);
     } catch (DataIntegrityViolationException e) {
