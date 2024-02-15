@@ -1,5 +1,9 @@
 package yiu.aisl.carpool.service;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.Notification;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -20,6 +24,7 @@ import yiu.aisl.carpool.exception.CustomException;
 import yiu.aisl.carpool.exception.ErrorCode;
 import yiu.aisl.carpool.repository.CarpoolRepository;
 import yiu.aisl.carpool.repository.StationRepository;
+import yiu.aisl.carpool.repository.UserRepository;
 import yiu.aisl.carpool.repository.WaitRepository;
 import yiu.aisl.carpool.security.CustomUserDetails;
 
@@ -29,9 +34,11 @@ import yiu.aisl.carpool.security.CustomUserDetails;
 @RequiredArgsConstructor
 public class CarpoolService {
 
+  private final FirebaseMessaging firebaseMessaging;
   private final CarpoolRepository carpoolRepository;
   private final WaitRepository waitRepository;
   private final StationRepository stationRepository;
+  private final UserRepository userRepository;
 
   public boolean create(CarpoolRequest request, CustomUserDetails customUserDetails) {
     if (request.getMemberNum() <= 0) {
@@ -102,6 +109,21 @@ public class CarpoolService {
                       .build();
 
               waitRepository.save(wait);
+              Notification notification = Notification.builder()
+                      .setTitle("\uD83D\uDE97 카풀 요청")
+                      .setBody("차주님~! " + email + "이 카풀을 요청하였어요~!")
+                      .build();
+
+              Optional<User> owner = userRepository.findByEmail(carpool.getEmail());
+              Message message = Message.builder()
+                      .setToken(owner.get().getFcmToken())
+                      .setNotification(notification)
+                      .build();
+              try {
+                firebaseMessaging.send(message);
+              } catch (FirebaseMessagingException e) {
+                e.printStackTrace();
+              }
             } else {
               throw new CustomException(ErrorCode.NUMBER_OF_APPLICATIONS_EXCEEDED);
             }
