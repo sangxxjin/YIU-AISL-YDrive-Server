@@ -162,6 +162,22 @@ public class CarpoolService {
     // 수락 처리
     wait.setCheckNum(1);
     carpool.setMemberNum(carpool.getMemberNum() - 1);
+
+    Notification notification = Notification.builder()
+            .setTitle("\uD83D\uDE97 카풀 수락")
+            .setBody("탑승자님~! " + email + "차주가 카풀을 수락하였어요~!")
+            .build();
+
+    Optional<User> guest = userRepository.findByEmail(wait.getGuest());
+    Message message = Message.builder()
+            .setToken(guest.get().getFcmToken())
+            .setNotification(notification)
+            .build();
+    try {
+      firebaseMessaging.send(message);
+    } catch (FirebaseMessagingException e) {
+      e.printStackTrace();
+    }
 //    carpool.setCheckNum(carpool.getMemberNum() == 0 ? 2 : 1);
 
     waitRepository.save(wait);
@@ -175,6 +191,21 @@ public class CarpoolService {
                     waitNum)
             .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
 
+    Notification notification = Notification.builder()
+            .setTitle("\uD83D\uDE97 카풀 거절")
+            .setBody("탑승자님 " + email + "차주가 카풀을 거절하였어요.")
+            .build();
+
+    Optional<User> guest = userRepository.findByEmail(wait.getGuest());
+    Message message = Message.builder()
+            .setToken(guest.get().getFcmToken())
+            .setNotification(notification)
+            .build();
+    try {
+      firebaseMessaging.send(message);
+    } catch (FirebaseMessagingException e) {
+      e.printStackTrace();
+    }
     wait.setCheckNum(2);
     waitRepository.save(wait);
   }
@@ -195,6 +226,21 @@ public class CarpoolService {
         // 자신의 checkNum이 1인 경우에 checkNum을 3으로 변경
         if (wait.getCheckNum() == 1) {
           wait.setCheckNum(3);
+          Notification notification = Notification.builder()
+                  .setTitle("\uD83D\uDE97 카풀 종료")
+                  .setBody("카풀종료!\n차주님께 카풀에 대한 보답은 꼭 해주세요~!\uD83C\uDF81")
+                  .build();
+
+          Optional<User> guest = userRepository.findByEmail(wait.getGuest());
+          Message message = Message.builder()
+                  .setToken(guest.get().getFcmToken())
+                  .setNotification(notification)
+                  .build();
+          try {
+            firebaseMessaging.send(message);
+          } catch (FirebaseMessagingException e) {
+            e.printStackTrace();
+          }
           waitRepository.save(wait);
         }
       }
