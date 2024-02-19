@@ -2,6 +2,7 @@ package yiu.aisl.carpool.service;
 
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,13 +26,27 @@ public class ScreenService {
   private final CarpoolRepository carpoolRepository;
   private final WaitRepository waitRepository;
 
-  public List<CarpoolResponse> getCarpool() {
+  public List<CarpoolResponse> getCarpool(CustomUserDetails userDetails) {
+    String city = userDetails.getUser().getHome();
     LocalDateTime currentDateTime = LocalDateTime.now();
-    return carpoolRepository.findAll().stream()
-        .filter(carpool -> carpool.getDate().isAfter(currentDateTime))
-        .map(CarpoolResponse::new)
-        .collect(Collectors.toList());
+    List<CarpoolResponse> filteredCarpools = carpoolRepository.findAll().stream()
+            .filter(carpool -> {
+              String[] startParts = carpool.getStart().split(" ");
+              String startCity = String.join(" ", Arrays.copyOfRange(startParts, 0, 2));
+
+              String[] endParts = carpool.getEnd().split(" ");
+              String endCity = String.join(" ", Arrays.copyOfRange(endParts, 0, 2));
+
+              return startCity.equals(city) || endCity.equals(city);
+            })
+            .filter(carpool -> carpool.getDate().isAfter(currentDateTime))
+            .map(CarpoolResponse::new)
+            .collect(Collectors.toList());
+
+    return filteredCarpools;
   }
+
+
 
   public List<CarpoolResponse> getMyCarpool(CustomUserDetails customUserDetails) {
     String userEmail = customUserDetails.getUser().getEmail();
