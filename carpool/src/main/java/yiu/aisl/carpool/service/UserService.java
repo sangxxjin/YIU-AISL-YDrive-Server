@@ -73,7 +73,7 @@ public class UserService {
   public boolean join(SignRequest request) {
     // 데이터 없음
     if (request.getEmail().isEmpty() || request.getPwd().isEmpty() || request.getDistrict()
-        .isEmpty() || request.getCity().isEmpty() || request.getName().isEmpty()) {
+            .isEmpty() || request.getCity().isEmpty() || request.getName().isEmpty()) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
     }
 
@@ -87,15 +87,16 @@ public class UserService {
       if (request.getEmail().length() != 9) {
         throw new CustomException(ErrorCode.VALID_EMAIL_LENGTH);
       }
+      String carNum = Optional.ofNullable(request.getCarNum()).orElse("");
       User user = User.builder()
-          .email(request.getEmail())
-          .name(request.getName())
-          .phone(request.getPhone())
-          .home(request.getCity() + " " + request.getDistrict())
-          .pwd(passwordEncoder.encode(request.getPwd()))
-          .carNum(request.getCarNum())
-          .build();
-      if (request.getCarNum().isEmpty()) {
+              .email(request.getEmail())
+              .name(request.getName())
+              .phone(request.getPhone())
+              .home(request.getCity() + " " + request.getDistrict())
+              .pwd(passwordEncoder.encode(request.getPwd()))
+              .carNum(carNum)
+              .build();
+      if (carNum.isEmpty()) {
         user.setStatus(0);
       }
       userRepository.save(user);
@@ -105,6 +106,7 @@ public class UserService {
     }
     return true;
   }
+
 
   public boolean changePwd(CustomUserDetails customUserDetails, PwdRequest request) {
     User user = customUserDetails.getUser();
