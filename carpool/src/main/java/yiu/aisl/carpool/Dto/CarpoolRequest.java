@@ -20,6 +20,38 @@ public class CarpoolRequest {
         return carpoolNum;
     }
 
+    public void setCarpoolNum(int carpoolNum) {
+        this.carpoolNum = carpoolNum;
+    }
+
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public void setMemberNum(int memberNum) {
+        this.memberNum = memberNum;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setCheckNum(int checkNum) {
+        this.checkNum = checkNum;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public String getStart() {
         return start;
     }

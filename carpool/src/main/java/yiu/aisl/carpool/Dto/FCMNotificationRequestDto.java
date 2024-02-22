@@ -11,6 +11,18 @@ public class FCMNotificationRequestDto {
     private String title;
     private String body;
 
+    public void setTargetUserId(String targetUserId) {
+        this.targetUserId = targetUserId;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
     public String getTargetUserId() {
         return targetUserId;
     }

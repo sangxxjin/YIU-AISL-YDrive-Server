@@ -13,6 +13,14 @@ public class PwdRequest {
         return this.pwd;
     }
 
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+
+    public void setNewPwd(String newPwd) {
+        this.newPwd = newPwd;
+    }
+
     public String getNewPwd() {
         return this.newPwd;
     }

@@ -15,6 +15,31 @@ import java.time.LocalDateTime;
 public class GuestUseInfoResponse {
     private String start;
     private String end;
+
+    public String getStart() {
+        return start;
+    }
+
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
     private LocalDateTime date;
 
     public GuestUseInfoResponse(Wait wait) {

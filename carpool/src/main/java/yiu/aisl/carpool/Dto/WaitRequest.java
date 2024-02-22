@@ -15,6 +15,30 @@ public class WaitRequest {
     private int checkNum;
     private LocalDateTime createdAt;
 
+    public void setWaitNum(int waitNum) {
+        this.waitNum = waitNum;
+    }
+
+    public void setCarpoolNum(Carpool carpoolNum) {
+        this.carpoolNum = carpoolNum;
+    }
+
+    public void setGuest(String guest) {
+        this.guest = guest;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public void setCheckNum(int checkNum) {
+        this.checkNum = checkNum;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public int getWaitNum() {
         return waitNum;
     }

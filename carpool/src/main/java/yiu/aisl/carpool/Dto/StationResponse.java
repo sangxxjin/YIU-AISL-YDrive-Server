@@ -29,4 +29,43 @@ public class StationResponse {
         this.city = city;
     }
 
+    public int getStationNum() {
+        return stationNum;
+    }
+
+    public void setStationNum(int stationNum) {
+        this.stationNum = stationNum;
+    }
+
+    public String getStationName() {
+        return stationName;
+    }
+
+    public void setStationName(String stationName) {
+        this.stationName = stationName;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public int getExitNum() {
+        return exitNum;
+    }
+
+    public void setExitNum(int exitNum) {
+        this.exitNum = exitNum;
+    }
 }

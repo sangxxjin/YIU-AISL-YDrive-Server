@@ -16,4 +16,12 @@ public class PwdResponse {
     public PwdResponse(User user) {
         this.pwd = user.getPwd();
     }
+
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
 }

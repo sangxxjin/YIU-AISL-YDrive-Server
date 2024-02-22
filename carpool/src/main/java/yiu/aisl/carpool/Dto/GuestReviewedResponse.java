@@ -15,6 +15,22 @@ public class GuestReviewedResponse {
     private int star;
     private String review;
 
+    public int getStar() {
+        return star;
+    }
+
+    public void setStar(int star) {
+        this.star = star;
+    }
+
+    public String getReview() {
+        return review;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
+    }
+
     public GuestReviewedResponse(GuestReviewed guestReviewed) {
         this.star = guestReviewed.getStar();
         this.review = guestReviewed.getReview();

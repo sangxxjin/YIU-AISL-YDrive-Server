@@ -18,6 +18,62 @@ public class SignResponse {
 
   private String phone;
 
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getPhone() {
+    return phone;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
+  public String getHome() {
+    return home;
+  }
+
+  public void setHome(String home) {
+    this.home = home;
+  }
+
+  public String getCarNum() {
+    return carNum;
+  }
+
+  public void setCarNum(String carNum) {
+    this.carNum = carNum;
+  }
+
+  public TokenDto getToken() {
+    return token;
+  }
+
+  public void setToken(TokenDto token) {
+    this.token = token;
+  }
+
+  public String getFcmToken() {
+    return fcmToken;
+  }
+
+  public void setFcmToken(String fcmToken) {
+    this.fcmToken = fcmToken;
+  }
+
   private String home;
 
   private String carNum;

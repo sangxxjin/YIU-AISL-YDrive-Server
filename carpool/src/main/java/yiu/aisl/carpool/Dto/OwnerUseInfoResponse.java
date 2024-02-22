@@ -14,6 +14,31 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class OwnerUseInfoResponse {
     private String start;
+
+    public String getStart() {
+        return start;
+    }
+
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
     private String end;
     private LocalDateTime date;
 

@@ -15,6 +15,22 @@ public class MyprofileDto {
   private String home;
   private String carNum;
 
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
+  public void setHome(String home) {
+    this.home = home;
+  }
+
+  public void setCarNum(String carNum) {
+    this.carNum = carNum;
+  }
+
   public String getName() {
     return name;
   }

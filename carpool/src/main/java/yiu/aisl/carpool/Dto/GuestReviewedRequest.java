@@ -14,6 +14,30 @@ public class GuestReviewedRequest {
   private LocalDateTime createdAt;
   private String email;
 
+  public void setReviewedNum(int reviewedNum) {
+    ReviewedNum = reviewedNum;
+  }
+
+  public void setWaitNum(int waitNum) {
+    this.waitNum = waitNum;
+  }
+
+  public void setStar(int star) {
+    this.star = star;
+  }
+
+  public void setReview(String review) {
+    this.review = review;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
   public int getReviewedNum() {
     return ReviewedNum;
   }
