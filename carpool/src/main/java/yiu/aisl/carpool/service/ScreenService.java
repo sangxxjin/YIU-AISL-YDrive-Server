@@ -40,6 +40,7 @@ public class ScreenService {
               return startCity.equals(city) || endCity.equals(city);
             })
             .filter(carpool -> carpool.getDate().isAfter(currentDateTime))
+            .filter(carpool -> carpool.getCheckNum() == 1 || carpool.getCheckNum() == 0)
             .map(CarpoolResponse::new)
             .collect(Collectors.toList());
 
