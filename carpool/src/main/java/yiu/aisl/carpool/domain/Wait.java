@@ -35,5 +35,53 @@ public class Wait {
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdAt;
+
+    public int getWaitNum() {
+        return waitNum;
+    }
+
+    public void setWaitNum(int waitNum) {
+        this.waitNum = waitNum;
+    }
+
+    public Carpool getCarpoolNum() {
+        return carpoolNum;
+    }
+
+    public void setCarpoolNum(Carpool carpoolNum) {
+        this.carpoolNum = carpoolNum;
+    }
+
+    public String getGuest() {
+        return guest;
+    }
+
+    public void setGuest(String guest) {
+        this.guest = guest;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public int getCheckNum() {
+        return checkNum;
+    }
+
+    public void setCheckNum(int checkNum) {
+        this.checkNum = checkNum;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }
 

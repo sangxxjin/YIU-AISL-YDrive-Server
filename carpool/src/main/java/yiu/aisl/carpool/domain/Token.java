@@ -32,4 +32,27 @@ public class Token {
     @TimeToLive(unit = TimeUnit.SECONDS)
     private Integer expiration;
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getRefresh_token() {
+        return refresh_token;
+    }
+
+    public void setRefresh_token(String refresh_token) {
+        this.refresh_token = refresh_token;
+    }
+
+    public Integer getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(Integer expiration) {
+        this.expiration = expiration;
+    }
 }
