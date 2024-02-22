@@ -14,4 +14,28 @@ public class WaitRequest {
     private String owner;
     private int checkNum;
     private LocalDateTime createdAt;
+
+    public int getWaitNum() {
+        return waitNum;
+    }
+
+    public Carpool getCarpoolNum() {
+        return carpoolNum;
+    }
+
+    public String getGuest() {
+        return guest;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public int getCheckNum() {
+        return checkNum;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 }

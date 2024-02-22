@@ -12,4 +12,12 @@ import lombok.NoArgsConstructor;
 public class UserStateDto {
   private int state;
   private String email;
+
+  public int getState() {
+    return state;
+  }
+
+  public String getEmail() {
+    return email;
+  }
 }

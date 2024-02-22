@@ -14,4 +14,27 @@ public class GuestReviewedRequest {
   private LocalDateTime createdAt;
   private String email;
 
+  public int getReviewedNum() {
+    return ReviewedNum;
+  }
+
+  public int getWaitNum() {
+    return waitNum;
+  }
+
+  public int getStar() {
+    return star;
+  }
+
+  public String getReview() {
+    return review;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public String getEmail() {
+    return email;
+  }
 }

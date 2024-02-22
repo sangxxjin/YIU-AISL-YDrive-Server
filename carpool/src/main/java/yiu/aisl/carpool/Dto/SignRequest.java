@@ -21,6 +21,38 @@ public class SignRequest {
 
   private String carNum;
 
+  public String getEmail() {
+    return email;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getPhone() {
+    return phone;
+  }
+
+  public String getCity() {
+    return city;
+  }
+
+  public String getDistrict() {
+    return district;
+  }
+
+  public String getPwd() {
+    return pwd;
+  }
+
+  public String getCarNum() {
+    return carNum;
+  }
+
+  public String getFcmToken() {
+    return fcmToken;
+  }
+
   private String fcmToken;
 
 }

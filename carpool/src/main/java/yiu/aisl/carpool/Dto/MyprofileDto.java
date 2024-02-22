@@ -14,4 +14,20 @@ public class MyprofileDto {
   private String phone;
   private String home;
   private String carNum;
+
+  public String getName() {
+    return name;
+  }
+
+  public String getPhone() {
+    return phone;
+  }
+
+  public String getHome() {
+    return home;
+  }
+
+  public String getCarNum() {
+    return carNum;
+  }
 }

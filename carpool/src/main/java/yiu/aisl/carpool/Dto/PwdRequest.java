@@ -13,7 +13,7 @@ public class PwdRequest {
         return this.pwd;
     }
 
-    public String newPwd() {
+    public String getNewPwd() {
         return this.newPwd;
     }
 }
