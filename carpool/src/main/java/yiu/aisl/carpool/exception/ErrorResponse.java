@@ -16,4 +16,16 @@ public class ErrorResponse {
         this.status = errorCode.getStatus();
         this.message = errorCode.getMessage();
     }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }
