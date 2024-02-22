@@ -8,4 +8,12 @@ import lombok.Setter;
 public class PwdRequest {
     private String pwd;
     private String newPwd;
+
+    public String getPwd() {
+        return this.pwd;
+    }
+
+    public String newPwd() {
+        return this.newPwd;
+    }
 }
