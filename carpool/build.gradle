@@ -53,6 +53,9 @@ dependencies {
 
     // firebase
     implementation 'com.google.firebase:firebase-admin:9.2.0'
+
+    // lombok
+    implementation 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
