@@ -64,8 +64,8 @@ public class UserService {
         .carNum(user.getCarNum())
             .fcmToken(user.getFcmToken())
         .token(TokenDto.builder()
-            .access_token(jwtProvider.createToken(user.getEmail()))
-            .refresh_token(user.getRefreshToken())
+            .accessToken(jwtProvider.createToken(user.getEmail()))
+            .refreshToken(user.getRefreshToken())
             .build())
         .build();
   }
@@ -177,16 +177,16 @@ public class UserService {
   }
 
   public TokenDto refreshAccessToken(TokenDto token) throws Exception {
-    String email = jwtProvider.getEmail(token.getAccess_token());
+    String email = jwtProvider.getEmail(token.getAccessToken());
     User user = userRepository.findByEmail(email).orElseThrow(() ->
-        new BadCredentialsException("잘못된 계정정보입니다."));
-    Token refreshToken = validRefreshToken(user, token.getRefresh_token());
+            new BadCredentialsException("잘못된 계정정보입니다."));
+    Token refreshToken = validRefreshToken(user, token.getRefreshToken());
 
     if (refreshToken != null) {
       return TokenDto.builder()
-          .access_token(jwtProvider.createToken(email))
-          .refresh_token(refreshToken.getRefresh_token())
-          .build();
+              .accessToken(jwtProvider.createToken(email))
+              .refreshToken(refreshToken.getRefresh_token())
+              .build();
     } else {
       throw new IllegalArgumentException("로그인을 해주세요");
     }
