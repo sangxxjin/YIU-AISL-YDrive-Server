@@ -110,13 +110,10 @@ public class UserService {
 
   public boolean changePwd(CustomUserDetails customUserDetails, PwdRequest request) {
     User user = customUserDetails.getUser();
-    if (request.getPwd().isEmpty() || request.getNewPwd().isEmpty()) {
+    if(request.getPwd().isEmpty()) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-    }
-    if (passwordEncoder.matches(request.getPwd(), customUserDetails.getPassword())) {
-      user.setPwd(passwordEncoder.encode(request.getNewPwd()));
     } else {
-      throw new CustomException(ErrorCode.VALID_NOT_PWD);
+      user.setPwd(passwordEncoder.encode(request.getPwd()));
     }
     userRepository.save(user);
     return true;
