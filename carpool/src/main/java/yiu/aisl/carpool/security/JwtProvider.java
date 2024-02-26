@@ -10,7 +10,11 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.time.Duration;
 import java.util.Date;
+import java.util.Set;
+
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,8 +32,8 @@ public class JwtProvider {
 
   private Key secretKey;
 
-  // 만료시간 : 30분
-  private final long exp = 500L * 60 * 60;
+  private long accessTokenValidTime = Duration.ofMinutes(30).toMillis(); // 만료시간 : 30분
+  private long refreshTokenValidTime = Duration.ofDays(180).toMillis(); // 만료시간 : 180일
 
   private final JpaUserDetailsService userDetailsService;
 
@@ -45,7 +49,7 @@ public class JwtProvider {
     return Jwts.builder()
         .setClaims(claims)
         .setIssuedAt(now)
-        .setExpiration(new Date(now.getTime() + exp))
+        .setExpiration(new Date(now.getTime() + accessTokenValidTime))
         .signWith(secretKey, SignatureAlgorithm.HS256)
         .compact();
   }
@@ -94,4 +98,54 @@ public class JwtProvider {
     }
   }
 
+  // JWT 토큰 유효성 검증 메서드
+  public boolean validToken(String token) {
+    try {
+      Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build()
+              .parseClaimsJws(token);
+
+      // 만료되었을 시 false
+      return !claims.getBody().getExpiration().before(new Date());
+    } catch (Exception e) {
+      System.out.println("복호화 에러: " + e.getMessage());
+      return false;
+    }
+  }
+
+  private Claims getClaims(String token) {
+    return Jwts.parser() // 클레임 조회
+            .setSigningKey(secretKey)
+            .parseClaimsJws(token)
+            .getBody();
+  }
+
+  // 토큰 정보 리턴
+  public TokenInfo getTokenInfo(String token) {
+    Claims body = getClaims(token);
+    Set<String> keySet = body.keySet();
+//        for (String s : keySet) {
+//            System.out.println("s = " + s);
+//        }
+
+    Long studentId = body.get("studentId", Long.class);
+    String nickname = body.get("nickname", String.class);
+    Date issuedAt = body.getIssuedAt();
+    Date expiration = body.getExpiration();
+    return new TokenInfo(studentId, nickname, issuedAt, expiration);
+  }
+
+  @Getter
+  public class TokenInfo {
+    private Long studentId;
+    private String nickname;
+    private Date issuedAt;
+    private Date expire;
+
+    public TokenInfo(Long studentId, String nickname, Date issuedAt, Date expire) {
+      this.studentId = studentId;
+      this.nickname = nickname;
+      this.issuedAt = issuedAt;
+      this.expire = expire;
+    }
+  }
 }
