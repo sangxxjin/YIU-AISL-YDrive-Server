@@ -75,7 +75,7 @@ public class SecurityConfig {
             // /user 로 시작하는 요청은 USER 권한이 있는 유저에게만 허용
 //            .requestMatchers("/user/**").hasRole("USER")
             // refresh 경로 설정*
-//            .requestMatchers("/register", "/login", "/refresh").permitAll()
+            .requestMatchers("/register", "/login", "/refresh").permitAll()
             .anyRequest().authenticated())
         // JWT 인증 필터 적용
         .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),

@@ -33,8 +33,8 @@ public class JwtProvider {
   private Key secretKey;
 
   // 만료시간 : 30분
-  private final long exp = 500L * 60 * 60;
-//  private long accessTokenValidTime = Duration.ofMinutes(30).toMillis(); // 만료시간 : 30분
+//  private final long exp = 500L * 60 * 60;
+  private long accessTokenValidTime = Duration.ofMinutes(30).toMillis(); // 만료시간 : 30분
   private long refreshTokenValidTime = Duration.ofDays(180).toMillis(); // 만료시간 : 180일
 
   private final JpaUserDetailsService userDetailsService;
@@ -51,7 +51,7 @@ public class JwtProvider {
     return Jwts.builder()
         .setClaims(claims)
         .setIssuedAt(now)
-        .setExpiration(new Date(now.getTime() + exp))
+        .setExpiration(new Date(now.getTime() + accessTokenValidTime))
         .signWith(secretKey, SignatureAlgorithm.HS256)
         .compact();
   }
