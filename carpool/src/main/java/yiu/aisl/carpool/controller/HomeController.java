@@ -31,7 +31,7 @@ public class HomeController {
     public ResponseEntity<Object> main(@AuthenticationPrincipal CustomUserDetails userDetails) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-        return new ResponseEntity<>(screenService.getCarpool(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(screenService.getCarpool(userDetails), headers, HttpStatus.OK);
     }
 
 }

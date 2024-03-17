@@ -50,6 +50,13 @@ dependencies {
 
     // template
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    // firebase
+    implementation 'com.google.firebase:firebase-admin:9.2.0'
+
+    // lombok
+    implementation 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {

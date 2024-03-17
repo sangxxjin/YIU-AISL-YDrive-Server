@@ -69,13 +69,13 @@ public class SecurityConfig {
         // 조건별로 요청 허용/제한 설정
         .authorizeHttpRequests(authorize -> authorize
             // 회원가입과 로그인은 모두 승인
-            .requestMatchers("/login", "/join", "/join/emailCheck","/join/emailCheckTrue", "/carpool/cityList").permitAll()
+            .requestMatchers("/login", "/join", "/join/emailCheck","/join/emailCheckTrue", "/carpool/cityList", "/api/v1/notification").permitAll()
             // /admin으로 시작하는 요청은 ADMIN 권한이 있는 유저에게만 허용
 //            .requestMatchers("/admin/**").hasRole("ADMIN")
             // /user 로 시작하는 요청은 USER 권한이 있는 유저에게만 허용
 //            .requestMatchers("/user/**").hasRole("USER")
             // refresh 경로 설정*
-//            .requestMatchers("/register", "/login", "/refresh").permitAll()
+            .requestMatchers("/register", "/login", "/refresh").permitAll()
             .anyRequest().authenticated())
         // JWT 인증 필터 적용
         .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),

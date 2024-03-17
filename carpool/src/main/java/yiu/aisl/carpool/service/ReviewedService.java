@@ -119,17 +119,9 @@ public class ReviewedService {
             .collect(Collectors.toList());
   }
 
-  public List<OwnerReviewedResponse> getOwnerReview(@RequestParam int carpoolNum, @AuthenticationPrincipal CustomUserDetails userDetails) {
-    String userEmail = userDetails.getUser().getEmail();
-    Optional<Carpool> carpoolOptional = carpoolRepository.findByCarpoolNum(carpoolNum);
-
-    if(carpoolOptional.isEmpty()) {
-      return Collections.emptyList();
-    }
-    String authorEmail = carpoolOptional.get().getEmail();
-
-    List<OwnerReviewed> authorReviews = ownerReviewdRepository.findByEmail(authorEmail);
-    return authorReviews.stream()
+  public List<OwnerReviewedResponse> getOwnerReview(@RequestParam String email, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    List<OwnerReviewed> myReviews = ownerReviewdRepository.findByEmail(email);
+    return myReviews.stream()
             .map(OwnerReviewedResponse::new)
             .collect(Collectors.toList());
   }

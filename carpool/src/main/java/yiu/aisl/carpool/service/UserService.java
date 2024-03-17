@@ -54,6 +54,7 @@ public class UserService {
     }
 
     user.setRefreshToken(createRefreshToken(user));
+    user.setFcmToken(request.getFcmToken());
 
     return SignResponse.builder()
         .email(user.getEmail())
@@ -61,9 +62,10 @@ public class UserService {
         .phone(user.getPhone())
         .home(user.getHome())
         .carNum(user.getCarNum())
+            .fcmToken(user.getFcmToken())
         .token(TokenDto.builder()
-            .access_token(jwtProvider.createToken(user.getEmail()))
-            .refresh_token(user.getRefreshToken())
+            .accessToken(jwtProvider.createToken(user.getEmail()))
+            .refreshToken(user.getRefreshToken())
             .build())
         .build();
   }
@@ -71,7 +73,7 @@ public class UserService {
   public boolean join(SignRequest request) {
     // 데이터 없음
     if (request.getEmail().isEmpty() || request.getPwd().isEmpty() || request.getDistrict()
-        .isEmpty() || request.getCity().isEmpty() || request.getName().isEmpty()) {
+            .isEmpty() || request.getCity().isEmpty() || request.getName().isEmpty()) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
     }
 
@@ -85,16 +87,17 @@ public class UserService {
       if (request.getEmail().length() != 9) {
         throw new CustomException(ErrorCode.VALID_EMAIL_LENGTH);
       }
+      String carNum = Optional.ofNullable(request.getCarNum()).orElse("");
       User user = User.builder()
-          .email(request.getEmail())
-          .name(request.getName())
-          .phone(request.getPhone())
-          .home(request.getCity() + " " + request.getDistrict())
-          .pwd(passwordEncoder.encode(request.getPwd()))
-          .carNum(request.getCarNum())
-          .build();
-      if (request.getCarNum() != null) {
-        user.setStatus(1);
+              .email(request.getEmail())
+              .name(request.getName())
+              .phone(request.getPhone())
+              .home(request.getCity() + " " + request.getDistrict())
+              .pwd(passwordEncoder.encode(request.getPwd()))
+              .carNum(carNum)
+              .build();
+      if (carNum.isEmpty()) {
+        user.setStatus(0);
       }
       userRepository.save(user);
     } catch (DataIntegrityViolationException e) {
@@ -104,15 +107,13 @@ public class UserService {
     return true;
   }
 
+
   public boolean changePwd(CustomUserDetails customUserDetails, PwdRequest request) {
     User user = customUserDetails.getUser();
-    if (request.getPwd().isEmpty() || request.getNewPwd().isEmpty()) {
+    if(request.getPwd().isEmpty()) {
       throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-    }
-    if (passwordEncoder.matches(request.getPwd(), customUserDetails.getPassword())) {
-      user.setPwd(passwordEncoder.encode(request.getNewPwd()));
     } else {
-      throw new CustomException(ErrorCode.VALID_NOT_PWD);
+      user.setPwd(passwordEncoder.encode(request.getPwd()));
     }
     userRepository.save(user);
     return true;
@@ -173,16 +174,16 @@ public class UserService {
   }
 
   public TokenDto refreshAccessToken(TokenDto token) throws Exception {
-    String email = jwtProvider.getEmail(token.getAccess_token());
+    String email = jwtProvider.getEmail(token.getAccessToken());
     User user = userRepository.findByEmail(email).orElseThrow(() ->
-        new BadCredentialsException("잘못된 계정정보입니다."));
-    Token refreshToken = validRefreshToken(user, token.getRefresh_token());
+            new BadCredentialsException("잘못된 계정정보입니다."));
+    Token refreshToken = validRefreshToken(user, token.getRefreshToken());
 
     if (refreshToken != null) {
       return TokenDto.builder()
-          .access_token(jwtProvider.createToken(email))
-          .refresh_token(refreshToken.getRefresh_token())
-          .build();
+              .accessToken(jwtProvider.createToken(email))
+              .refreshToken(refreshToken.getRefresh_token())
+              .build();
     } else {
       throw new IllegalArgumentException("로그인을 해주세요");
     }

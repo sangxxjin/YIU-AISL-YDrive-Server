@@ -38,11 +38,11 @@ public class ReviewedController {
     return new ResponseEntity<>(reviewedService.guestReviewed(carpoolNum,waitNum,request, customUserDetails), HttpStatus.OK);
   }
 
-  @GetMapping("/list/review/owner/{carpoolNum}")
-  public ResponseEntity<Object> getOwnerReview(@PathVariable int carpoolNum, @AuthenticationPrincipal CustomUserDetails userDetails) {
+  @GetMapping("/list/review/owner/{email}")
+  public ResponseEntity<Object> getOwnerReview(@PathVariable String email, @AuthenticationPrincipal CustomUserDetails userDetails) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-    return new ResponseEntity<>(reviewedService.getOwnerReview(carpoolNum, userDetails), headers, HttpStatus.OK);
+    return new ResponseEntity<>(reviewedService.getOwnerReview(email, userDetails), headers, HttpStatus.OK);
   }
 
   @GetMapping("/list/review/guest/{email}")

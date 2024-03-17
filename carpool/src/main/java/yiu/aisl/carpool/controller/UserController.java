@@ -48,7 +48,7 @@ public class UserController {
   public ResponseEntity<SignResponse> getUserForAdmin(@RequestParam String email) throws Exception {
     return new ResponseEntity<>( userService.getUser(email), HttpStatus.OK);
   }
-  @GetMapping("/refresh")
+  @PostMapping("/refresh")
   public ResponseEntity<TokenDto> refresh(@RequestBody TokenDto token) throws Exception {
     return new ResponseEntity<>( userService.refreshAccessToken(token), HttpStatus.OK);
   }
@@ -64,7 +64,7 @@ public class UserController {
   @ResponseBody
   @PostMapping("/join/emailCheckTrue")
   public boolean emailTrue(@RequestBody EmailCheckReq emailDto) {
-    boolean emailCheckTrue = emailService.emailTrue(emailDto.getAuthNum());
+    boolean emailCheckTrue = emailService.emailTrue(emailDto.getEmail(), emailDto.getAuthNum());
     return emailCheckTrue;
   }
 

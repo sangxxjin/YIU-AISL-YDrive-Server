@@ -12,4 +12,20 @@ import lombok.NoArgsConstructor;
 public class UserStateDto {
   private int state;
   private String email;
+
+  public void setState(int state) {
+    this.state = state;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public int getState() {
+    return state;
+  }
+
+  public String getEmail() {
+    return email;
+  }
 }

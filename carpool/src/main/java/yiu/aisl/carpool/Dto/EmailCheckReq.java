@@ -12,4 +12,20 @@ import lombok.Setter;
 public class EmailCheckReq {
     private String email;
     private String authNum;
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setAuthNum(String authNum) {
+        this.authNum = authNum;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getAuthNum() {
+        return authNum;
+    }
 }
