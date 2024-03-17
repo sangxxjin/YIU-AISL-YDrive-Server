@@ -64,7 +64,7 @@ public class UserController {
   @ResponseBody
   @PostMapping("/join/emailCheckTrue")
   public boolean emailTrue(@RequestBody EmailCheckReq emailDto) {
-    boolean emailCheckTrue = emailService.emailTrue(emailDto.getAuthNum());
+    boolean emailCheckTrue = emailService.emailTrue(emailDto.getEmail(), emailDto.getAuthNum());
     return emailCheckTrue;
   }
 
